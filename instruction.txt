@@ -1,0 +1,8 @@
+Try to find the COM port for
+bluetooth outgoing in your computer
+(normally 12). Once you find the port,
+type it in Settings. Remember the app
+starts to count at 0, so if you want
+to port 12, type 11 in the box, then
+click "Save" and back to the menu.
+Click "New Season" and start control the car.
