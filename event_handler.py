@@ -9,6 +9,7 @@ class EventLogic:
         self._game_state = _game_state
         self._game_gui = _game_gui
         self.bluetooth_talk = core_communication.Communication()
+        self.current_prompt = None
         self.movement = {
             K_UP: 8,
             K_DOWN: 2,
@@ -49,8 +50,24 @@ class EventLogic:
             elif self._game_state.get_state() == "setting":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
-                elif self._game_gui.prompt_rect.collidepoint(event.pos):
+                elif self._game_gui.host_prompt.rect.collidepoint(event.pos):
                     self._game_gui.set_typing_tag(True)
+                    self._game_gui.host_prompt.reset_display_title()
+                    self._game_gui.user_prompt.set_display_title()
+                    self._game_gui.password_prompt.set_display_title()
+                    self.current_prompt = self._game_gui.host_prompt
+                elif self._game_gui.user_prompt.rect.collidepoint(event.pos):
+                    self._game_gui.set_typing_tag(True)
+                    self._game_gui.host_prompt.set_display_title()
+                    self._game_gui.user_prompt.reset_display_title()
+                    self._game_gui.password_prompt.set_display_title()
+                    self.current_prompt = self._game_gui.user_prompt
+                elif self._game_gui.password_prompt.rect.collidepoint(event.pos):
+                    self._game_gui.set_typing_tag(True)
+                    self._game_gui.host_prompt.set_display_title()
+                    self._game_gui.user_prompt.set_display_title()
+                    self._game_gui.password_prompt.reset_display_title()
+                    self.current_prompt = self._game_gui.password_prompt
                 elif self._game_gui.save.get_rect().collidepoint(event.pos):
                     self.bluetooth_talk.specify_port(int(self._game_gui.prompt.output()[0]))
                     self._game_gui.prompt.reset()
@@ -89,13 +106,6 @@ class EventLogic:
                         self.bluetooth_talk.command(str(self.movement[event.key]))
                         self.event_handler()
 
-            elif event.key in range(48, 58) or event.key in range(256, 266):
+            else:
                 if self._game_gui.typing_tag:
-                    if event.key < 100:
-                        char = str(event.key-48)
-                    elif event.key < 300:
-                        char = str(event.key-256)
-                    self._game_gui.prompt.take_char(char)
-
-                elif event.key == K_BACKSPACE:
-                    self._game_gui.prompt.take_char("del")
+                    self.current_prompt.take_char(pygame.key.name(event.key))

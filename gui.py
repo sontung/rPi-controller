@@ -25,11 +25,10 @@ class GUI:
         self.bg_color = self.colors["turquoise blue"]
         self.tile_color = self.bg_color
         self.display_surface = pygame.display.set_mode((self.window_width, self.window_height))
-        pygame.display.set_caption("Pipi Controlling Interface")
+        pygame.display.set_caption("Light Controlling Interface")
         self.font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
         self.font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
         self.typing_tag = False
-        self.prompt = Prompt((self.window_width/2-27, self.window_height/2-57), self)
         self.pos_pad_modify_command = {
             0: (90, 340),
             2: (90, 390),
@@ -46,6 +45,11 @@ class GUI:
         }
         self.pos_pad_indication = ""  # Default indication for the position of game pad
         self.pos_pad = (90, 340)  # Default position for the game pad
+
+        # for setting up information for communication
+        self.host_prompt = Prompt((self.window_width/4, self.window_height/3), self, "host")
+        self.user_prompt = Prompt((self.window_width/4, self.window_height/3+100), self, "username")
+        self.password_prompt = Prompt((self.window_width/4, self.window_height/3+200), self, "password")
 
     def make_text(self, text, color, bg_color, center):
         """
@@ -140,22 +144,26 @@ class GUI:
             pygame.draw.circle(self.display_surface, self.colors["gray"], self.pos_pad, 30, 30)
 
         elif state == "setting":
-            self.prompt_rect = pygame.Rect(self.window_width/2-30, self.window_height/2-60, 60, 50)
-            pygame.draw.rect(self.display_surface, self.colors["white"], self.prompt_rect)
-            self.guide_sur, self.guide_rect = self.make_text("Specify your Bluetooth COM port below:",
+            self.host_prompt.draw_rect()
+            self.user_prompt.draw_rect()
+            self.password_prompt.draw_rect()
+
+            self.guide_sur, self.guide_rect = self.make_text("Specify essential information below:",
                                                              self.colors["green"], self.tile_color,
                                                              (self.window_width/2, self.window_height/4))
-            self.save = Button("Save", self.text_color, self.tile_color, (self.window_width/2+90, self.window_height//2-45), self)
+            self.save = Button("Save", self.text_color, self.tile_color, (3*self.window_width/4, self.window_height/3), self)
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
             self.buttons = [self.back, self.save]
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
             self.display_surface.blit(self.save.get_sr()[0], self.save.get_sr()[1])
             self.display_surface.blit(self.guide_sur, self.guide_rect)
             if self.typing_tag:
-                pygame.draw.line(self.display_surface, self.colors["black"],
-                                 (self.window_width/2-27, self.window_height/2-57),
-                                 (self.window_width/2-27, self.window_height/2-33), 2)
-            self.display_surface.blit(self.prompt.output()[1], self.prompt.output()[2])
+                self.display_surface.blit(self.host_prompt.output()[1], self.host_prompt.output()[2])
+                self.display_surface.blit(self.user_prompt.output()[1], self.user_prompt.output()[2])
+                self.display_surface.blit(self.password_prompt.output()[1], self.password_prompt.output()[2])
+            self.display_surface.blit(self.host_prompt.output_title()[0], self.host_prompt.output_title()[1])
+            self.display_surface.blit(self.user_prompt.output_title()[0], self.user_prompt.output_title()[1])
+            self.display_surface.blit(self.password_prompt.output_title()[0], self.password_prompt.output_title()[1])
 
         elif state == "error":
             sys.stdin = open("error_help.txt")
@@ -167,7 +175,7 @@ class GUI:
                                                                                 self.window_height/2-120+i*35))
                 self.display_surface.blit(self.instructions_sur, self.instructions_rect)
             self.back = Button("Back", self.text_color, self.tile_color,
-                               (self.window_width-60, self.window_height/8), self)
+                               (self.window_width-60, self.window_height/10), self)
             self.buttons = [self.back]
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
@@ -218,20 +226,38 @@ class Button:
 
 
 class Prompt:
-    def __init__(self, topleft, _gui):
+    def __init__(self, topleft, _gui, title=""):
+        self.title = title
         self.string = ""
+        self.display_title = True
+        self.gui = _gui
+        self.colors = _gui.colors
         self.color = _gui.text_color
         self.bg_color = _gui.colors["white"]
         self.topleft = topleft
         self.font = _gui.font
+        self.rect = pygame.Rect(self.topleft[0], self.topleft[1], 360, 70)
 
-    def make_text(self):
+    def draw_rect(self):
+        """
+        Draw a blank space
+        :return:
+        """
+        if self.display_title:
+            pygame.draw.rect(self.gui.display_surface, self.colors["white"], self.rect)
+        else:
+            pygame.draw.rect(self.gui.display_surface, self.colors["white"], self.rect, 3)
+
+    def make_text(self, text, color=None):
         """
         Make a text object for drawing
         """
-        text_surf = self.font.render(self.string, True, self.color, self.bg_color)
+        if color == None:
+            text_surf = self.font.render(text, True, self.color, self.colors["turquoise blue"])
+        else:
+            text_surf = self.font.render(text, True, color, self.bg_color)
         text_rect = text_surf.get_rect()
-        text_rect.topleft = self.topleft
+        text_rect.topleft = (self.topleft[0]+1, self.topleft[1]+3)
         return text_surf, text_rect
 
     def take_char(self, char):
@@ -239,18 +265,33 @@ class Prompt:
         Take in character or delete previous one.
         :return:
         """
-        if char != "del":
-            if len(self.string) <= 3:
-                self.string += char
+        if char != "backspace":
+            self.string += char
         else:
             self.string = self.string[:-1]
+
+    def set_display_title(self):
+        self.display_title = True
+
+    def reset_display_title(self):
+        self.display_title = False
+
+    def output_title(self):
+        """
+        Output the title for this prompt
+        :return:
+        """
+        if self.display_title and self.string == "":
+            return self.make_text(self.title, self.colors["gray"])
+        else:
+            return self.make_text("", self.colors["gray"])
 
     def output(self):
         """
         Output the string
         :return:
         """
-        sur, rect = self.make_text()
+        sur, rect = self.make_text(self.string)
         return self.string, sur, rect
 
     def reset(self):
