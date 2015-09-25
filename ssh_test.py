@@ -3,7 +3,7 @@ import time
 import select
 import paramiko
 
-host = '172.31.39.61'
+host = '192.168.43.96'
 username = 'pi'
 password = 'raspberry'
 i = 1
@@ -18,7 +18,7 @@ while True:
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(host, username, password)
+        ssh.connect(host, username='pi', password='raspberry')
         print "Connected to %s" % host
         break
     except paramiko.AuthenticationException:
@@ -35,7 +35,7 @@ while True:
         sys.exit(1)
 
 # Send the command (non-blocking)
-stdin, stdout, stderr = ssh.exec_command("my_long_command --arg 1 --arg 2")
+stdin, stdout, stderr = ssh.exec_command("ls")
 
 # Wait for the command to terminate
 while not stdout.channel.exit_status_ready():
