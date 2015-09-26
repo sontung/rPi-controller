@@ -1,7 +1,7 @@
 """
-This is the code for communicating with the Pipi through bluetooth. It uses PySerial
-as a main way to setup a serial connection between this app and the Pipi (or the bluetooth
-module). To connect successfully, one must find his/her correct port for outgoing bluetooth.
+This is the code for communicating with the rPi through SSH. It uses paramiko
+as a main way to setup a SSH connection between this app and the rPi.
+To connect successfully, one must find rPi's IP address.
 """
 import paramiko
 import sys

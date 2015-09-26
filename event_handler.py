@@ -28,13 +28,13 @@ class EventLogic:
             if self._game_state.get_state() == "welcome":
                 if self._game_gui.new.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("new season")
-                    if self.bluetooth_talk.serial_port is None:
-                        self._game_state.set_state("error")
-                    else:
-                        try:
-                            self.bluetooth_talk.connect()
-                        except IOError:
-                            self._game_state.set_state("error")
+                    # if self.bluetooth_talk.serial_port is None:
+                    #     self._game_state.set_state("error")
+                    # else:
+                    #     try:
+                    #         self.bluetooth_talk.connect()
+                    #     except IOError:
+                    #         self._game_state.set_state("error")
                 elif self._game_gui.help.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("help")
                 elif self._game_gui.author.get_rect().collidepoint(event.pos):
@@ -45,7 +45,7 @@ class EventLogic:
                     self.quit()
             elif self._game_state.get_state() == "new season":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
-                    self.bluetooth_talk.disconnect()
+                    # self.bluetooth_talk.disconnect()
                     self._game_state.set_state("welcome")
             elif self._game_state.get_state() == "setting":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):

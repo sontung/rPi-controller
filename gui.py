@@ -135,28 +135,32 @@ class GUI:
 
         elif state == "new season":
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
-            indi_sur, indi_rect = self.make_text(self.pos_pad_indication, self.text_color, self.tile_color,
-                                                 (self.window_width/2, self.window_height/2))
-            self.buttons = [self.back]
+            choose_sur, choose_rect = self.make_text("Choose your pref communication", self.text_color, self.tile_color,
+                                                     (self.window_width/2, self.window_height/4))
+            self.ssh_button = Button("SSH connection", self.text_color, self.tile_color,
+                                     (self.window_width/4, self.window_height/2), self)
+            self.socket_button = Button("Socket connection", self.text_color, self.tile_color,
+                                        (self.window_width*3/4, self.window_height/2), self)
+            self.buttons = [self.ssh_button, self.socket_button, self.back]
+            self.display_surface.blit(choose_sur, choose_rect)
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
-            self.display_surface.blit(indi_sur, indi_rect)
-            pygame.draw.circle(self.display_surface, self.colors["white"], (90, 340), 50, 6)
-            pygame.draw.circle(self.display_surface, self.colors["gray"], self.pos_pad, 30, 30)
+            self.display_surface.blit(self.ssh_button.get_sr()[0], self.ssh_button.get_sr()[1])
+            self.display_surface.blit(self.socket_button.get_sr()[0], self.socket_button.get_sr()[1])
 
         elif state == "setting":
             self.host_prompt.draw_rect()
             self.user_prompt.draw_rect()
             self.password_prompt.draw_rect()
 
-            self.guide_sur, self.guide_rect = self.make_text("Specify essential information below:",
-                                                             self.colors["green"], self.tile_color,
-                                                             (self.window_width/2, self.window_height/4))
+            guide_sur, guide_rect = self.make_text("Specify essential information below:",
+                                                   self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/4))
             self.save = Button("Save", self.text_color, self.tile_color, (3*self.window_width/4, self.window_height/3), self)
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
             self.buttons = [self.back, self.save]
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
             self.display_surface.blit(self.save.get_sr()[0], self.save.get_sr()[1])
-            self.display_surface.blit(self.guide_sur, self.guide_rect)
+            self.display_surface.blit(guide_sur, guide_rect)
             if self.typing_tag:
                 self.display_surface.blit(self.host_prompt.output()[1], self.host_prompt.output()[2])
                 self.display_surface.blit(self.user_prompt.output()[1], self.user_prompt.output()[2])
