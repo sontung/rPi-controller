@@ -9,7 +9,7 @@ import time
 import select
 
 
-class Communication:
+class SSHCommunication:
     def __init__(self):
         self.host = ""
         self.user = ""
@@ -50,8 +50,9 @@ class Communication:
                 time.sleep(2)
 
             # If we could not connect within time limit
-            if i == 30:
+            if i == 5:
                 print "Could not connect to %s. Giving up" % self.host
+                raise RuntimeError
                 sys.exit(1)
 
     def disconnect(self):

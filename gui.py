@@ -51,6 +51,11 @@ class GUI:
         self.user_prompt = Prompt((self.window_width/4, self.window_height/3+100), self, "username")
         self.password_prompt = Prompt((self.window_width/4, self.window_height/3+200), self, "password")
 
+    def reset_prompts(self):
+        self.host_prompt.reset()
+        self.user_prompt.reset()
+        self.password_prompt.reset()
+
     def make_text(self, text, color, bg_color, center):
         """
         Make a text object for drawing
@@ -169,7 +174,7 @@ class GUI:
             self.display_surface.blit(self.user_prompt.output_title()[0], self.user_prompt.output_title()[1])
             self.display_surface.blit(self.password_prompt.output_title()[0], self.password_prompt.output_title()[1])
 
-        elif state == "error":
+        elif state.find("error") != -1:
             sys.stdin = open("error_help.txt")
             for i in range(9):
                 instructions = sys.stdin.readline().strip()
@@ -178,9 +183,16 @@ class GUI:
                                                                                (self.window_width/2,
                                                                                 self.window_height/2-120+i*35))
                 self.display_surface.blit(self.instructions_sur, self.instructions_rect)
+            if state == "error cannot connect":
+                error_sur, error_rect = self.make_text("Cannot connect", self.colors["red"], self.tile_color,
+                                                       (self.window_width/2, self.window_height*2.5/4))
+            elif state == "error authentication":
+                error_sur, error_rect = self.make_text("Wrong credentials", self.colors["red"], self.tile_color,
+                                                       (self.window_width/2, self.window_height*2.5/4))
             self.back = Button("Back", self.text_color, self.tile_color,
                                (self.window_width-60, self.window_height/10), self)
             self.buttons = [self.back]
+            self.display_surface.blit(error_sur, error_rect)
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
 

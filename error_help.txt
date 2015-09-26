@@ -1,3 +1,4 @@
-Sorry, but you got the wrong COM port 
-for bluetooth. Refer to the instruction 
-for help, then configure it again in Setting
+Sorry, but you got the wrong necessary
+information for the connection. Refer to
+the instruction for help, then configure
+it again in Setting. You get this following error:

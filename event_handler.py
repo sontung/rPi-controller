@@ -1,3 +1,4 @@
+import paramiko
 import pygame
 import sys
 import core_communication
@@ -8,7 +9,7 @@ class EventLogic:
     def __init__(self, _game_state, _game_gui):
         self._game_state = _game_state
         self._game_gui = _game_gui
-        self.bluetooth_talk = core_communication.Communication()
+        self.ssh_talk = core_communication.SSHCommunication()
         self.current_prompt = None
         self.movement = {
             K_UP: 8,
@@ -28,13 +29,6 @@ class EventLogic:
             if self._game_state.get_state() == "welcome":
                 if self._game_gui.new.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("new season")
-                    # if self.bluetooth_talk.serial_port is None:
-                    #     self._game_state.set_state("error")
-                    # else:
-                    #     try:
-                    #         self.bluetooth_talk.connect()
-                    #     except IOError:
-                    #         self._game_state.set_state("error")
                 elif self._game_gui.help.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("help")
                 elif self._game_gui.author.get_rect().collidepoint(event.pos):
@@ -43,10 +37,20 @@ class EventLogic:
                     self._game_state.set_state("setting")
                 elif self._game_gui.quit.get_rect().collidepoint(event.pos):
                     self.quit()
+
             elif self._game_state.get_state() == "new season":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
-                    # self.bluetooth_talk.disconnect()
                     self._game_state.set_state("welcome")
+                elif self._game_gui.ssh_button.get_rect().collidepoint(event.pos):
+                    try:
+                        self.ssh_talk.connect()
+                    except paramiko.AuthenticationException:
+                        self._game_state.set_state("error ssh authentication")
+                    except RuntimeError:
+                        self._game_state.set_state("error cannot connect")
+                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):
+                    pass
+
             elif self._game_state.get_state() == "setting":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
@@ -69,13 +73,17 @@ class EventLogic:
                     self._game_gui.password_prompt.reset_display_title()
                     self.current_prompt = self._game_gui.password_prompt
                 elif self._game_gui.save.get_rect().collidepoint(event.pos):
-                    self.bluetooth_talk.specify_port(int(self._game_gui.prompt.output()[0]))
-                    self._game_gui.prompt.reset()
+                    self.ssh_talk.specify_information(self._game_gui.host_prompt.output()[0],
+                                                      self._game_gui.user_prompt.output()[0],
+                                                      self._game_gui.password_prompt.output()[0])
+                    self._game_gui.reset_prompts()
                 else:
                     self._game_gui.set_typing_tag(False)
-            elif self._game_state.get_state() == "error":
+
+            elif self._game_state.get_state().find("error") != -1:
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
+
             elif self._game_state.get_state() in ["help", "author", "setting"]:
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
