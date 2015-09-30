@@ -26,25 +26,10 @@ class GUI:
         self.tile_color = self.bg_color
         self.display_surface = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("Light Controlling Interface")
+        self.button_sprites = pygame.image.load("assets\\images\\buttons.png")
         self.font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
         self.font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
         self.typing_tag = False
-        self.pos_pad_modify_command = {
-            0: (90, 340),
-            2: (90, 390),
-            8: (90, 290),
-            4: (40, 340),
-            6: (140, 340)
-        }
-        self.pos_pad_modify_indication = {
-            0: "",
-            2: "moving backward",
-            8: "moving forward",
-            4: "moving to the left",
-            6: "moving to the right"
-        }
-        self.pos_pad_indication = ""  # Default indication for the position of game pad
-        self.pos_pad = (90, 340)  # Default position for the game pad
 
         # for setting up information for communication
         self.host_prompt = Prompt((self.window_width/4, self.window_height/3), self, "host")
@@ -174,6 +159,21 @@ class GUI:
             self.display_surface.blit(self.user_prompt.output_title()[0], self.user_prompt.output_title()[1])
             self.display_surface.blit(self.password_prompt.output_title()[0], self.password_prompt.output_title()[1])
 
+        elif state == "SSH season":
+            title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/10))
+            self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.light_switch = ButtonSprite((self.window_width/4, self.window_height/4), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            light_indication_sur, light_indication_rect = self.make_text("Light On/Off", self.text_color,
+                                                                         self.tile_color,
+                                                                         (self.window_width/8, self.window_height/4+25))
+            self.buttons = [self.light_switch, self.back]
+            self.display_surface.blit(title_sur, title_rect)
+            self.display_surface.blit(light_indication_sur, light_indication_rect)
+            self.display_surface.blit(self.light_switch.get_img(), self.light_switch.get_pos())
+            self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
         elif state.find("error") != -1:
             sys.stdin = open("error_help.txt")
             for i in range(9):
@@ -194,6 +194,47 @@ class GUI:
             self.buttons = [self.back]
             self.display_surface.blit(error_sur, error_rect)
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
+
+class Sprite:
+    def __init__(self, pos, sheet, loc_in_sheet, _game_gui):
+        self.sheet = sheet
+        self.loc_in_sheet = loc_in_sheet  # a dictionary keeping track of each movement and their sprites
+        self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["normal"][0], self.loc_in_sheet["normal"][1], 50, 50))
+        self.img = self.sheet.subsurface(self.sheet.get_clip())
+        self.pos = pos
+        self.gui = _game_gui
+
+    def get_img(self):
+        return self.img
+
+    def get_pos(self):
+        return self.pos
+
+
+class ButtonSprite(Sprite):
+    def __init__(self, pos, sheet, loc_in_sheet, _game_gui):
+        Sprite.__init__(self, pos, sheet, loc_in_sheet, _game_gui)
+        self.rect = pygame.Rect(self.pos[0], self.pos[0], 50, 50)
+        self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["hover"][0], self.loc_in_sheet["hover"][1], 50, 50))
+        self.img_hover = self.sheet.subsurface(self.sheet.get_clip())
+        self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["pressed"][0], self.loc_in_sheet["pressed"][1], 50, 50))
+        self.img_pressed = self.sheet.subsurface(self.sheet.get_clip())
+
+    def get_rect(self):
+        return self.rect
+
+    def set_pressed(self, pos):
+        if self.rect.collidepoint(pos):
+            self.gui.display_surface.blit(self.img_pressed, self.pos)
+            print "press"
+
+    def set_bold(self, pos):
+        """
+        Highlight the button when the user hovers mouse over
+        """
+        if self.rect.collidepoint(pos):
+            self.gui.display_surface.blit(self.img_hover, self.pos)
 
 
 class Button:
@@ -230,6 +271,9 @@ class Button:
 
     def update_sr(self):
         self.surf, self.rect = self.make_text()
+
+    def set_pressed(self, pos):
+        pass
 
     def set_bold(self, pos):
         """
@@ -268,7 +312,7 @@ class Prompt:
         """
         Make a text object for drawing
         """
-        if color == None:
+        if color is None:
             text_surf = self.font.render(text, True, self.color, self.colors["turquoise blue"])
         else:
             text_surf = self.font.render(text, True, color, self.bg_color)

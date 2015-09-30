@@ -25,7 +25,11 @@ class EventLogic:
     def event_handler(self):
 
         event = pygame.event.poll()
-        if event.type == MOUSEBUTTONUP:
+        if event.type == MOUSEBUTTONDOWN:
+            if self._game_gui.buttons:
+                for button1 in self._game_gui.buttons:
+                    button1.set_pressed(pygame.mouse.get_pos())
+
             if self._game_state.get_state() == "welcome":
                 if self._game_gui.new.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("new season")
@@ -41,15 +45,25 @@ class EventLogic:
             elif self._game_state.get_state() == "new season":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
-                elif self._game_gui.ssh_button.get_rect().collidepoint(event.pos):
+                elif self._game_gui.ssh_button.get_rect().collidepoint(event.pos):  # connecting to SSH
                     try:
                         self.ssh_talk.connect()
                     except paramiko.AuthenticationException:
                         self._game_state.set_state("error ssh authentication")
                     except RuntimeError:
                         self._game_state.set_state("error cannot connect")
-                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):
+                    else:
+                        self._game_state.set_state("SSH season")
+                        self.ssh_talk.command("cd group12")
+                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to socket
                     pass
+
+            elif self._game_state.get_state() == "SSH season":
+                if self._game_gui.light_switch.get_rect().collidepoint(event.pos):
+                    self.ssh_talk.command("sudo python LED.py switch")
+                elif self._game_gui.back.get_rect().collidepoint(event.pos):
+                    self.ssh_talk.disconnect()
+                    self._game_state.set_state("welcome")
 
             elif self._game_state.get_state() == "setting":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
@@ -90,10 +104,8 @@ class EventLogic:
 
         elif event.type == MOUSEMOTION or event.type == NOEVENT:
             if self._game_gui.buttons:
-                self._game_gui.draw(self._game_state.get_state())
                 for button in self._game_gui.buttons:
                     button.set_bold(pygame.mouse.get_pos())
-                pygame.display.update()
 
         elif event.type == pygame.QUIT:
             self.quit()
