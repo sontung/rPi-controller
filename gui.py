@@ -27,9 +27,15 @@ class GUI:
         self.display_surface = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption("Light Controlling Interface")
         self.button_sprites = pygame.image.load("assets\\images\\buttons.png")
+        self.light_sprites = pygame.image.load("assets\\images\\leds.png")
         self.font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
         self.font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
         self.typing_tag = False
+
+        # states of the lights
+        self.red = False
+        self.green = False
+        self.yellow = False
 
         # for setting up information for communication
         self.host_prompt = Prompt((self.window_width/4, self.window_height/3), self, "host")
@@ -40,6 +46,14 @@ class GUI:
         self.host_prompt.reset()
         self.user_prompt.reset()
         self.password_prompt.reset()
+
+    def command_switch(self, light):
+        if light == "all":
+            self.red = not self.red
+            self.green = not self.green
+            self.yellow = not self.yellow
+        else:
+            light = not light
 
     def make_text(self, text, color, bg_color, center):
         """
@@ -163,6 +177,12 @@ class GUI:
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
+                                         {"on": (105, 0), "normal": (0, 0)}, self, self.red)
+            self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
+                                           {"on": (35, 0), "normal": (0, 0)}, self, self.green)
+            self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
+                                            {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
             self.light_switch = ButtonSprite((self.window_width/4, self.window_height/4), self.button_sprites,
                                              {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
             light_indication_sur, light_indication_rect = self.make_text("Light On/Off", self.text_color,
@@ -172,6 +192,9 @@ class GUI:
             self.display_surface.blit(title_sur, title_rect)
             self.display_surface.blit(light_indication_sur, light_indication_rect)
             self.display_surface.blit(self.light_switch.get_img(), self.light_switch.get_pos())
+            self.display_surface.blit(self.red_light.get_img(), self.red_light.get_pos())
+            self.display_surface.blit(self.green_light.get_img(), self.green_light.get_pos())
+            self.display_surface.blit(self.yellow_light.get_img(), self.yellow_light.get_pos())
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state.find("error") != -1:
@@ -197,11 +220,15 @@ class GUI:
 
 
 class Sprite:
-    def __init__(self, pos, sheet, loc_in_sheet, _game_gui):
+    def __init__(self, pos, sheet, loc_in_sheet, _game_gui, dim=None):
         self.sheet = sheet
         self.loc_in_sheet = loc_in_sheet  # a dictionary keeping track of each movement and their sprites
-        self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["normal"][0], self.loc_in_sheet["normal"][1], 50, 50))
-        self.img = self.sheet.subsurface(self.sheet.get_clip())
+        if dim:
+            self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["normal"][0], self.loc_in_sheet["normal"][1], dim[0], dim[1]))
+            self.img = self.sheet.subsurface(self.sheet.get_clip())
+        else:
+            self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["normal"][0], self.loc_in_sheet["normal"][1], 50, 50))
+            self.img = self.sheet.subsurface(self.sheet.get_clip())
         self.pos = pos
         self.gui = _game_gui
 
@@ -227,7 +254,6 @@ class ButtonSprite(Sprite):
     def set_pressed(self, pos):
         if self.rect.collidepoint(pos):
             self.gui.display_surface.blit(self.img_pressed, self.pos)
-            print "press"
 
     def set_bold(self, pos):
         """
@@ -235,6 +261,24 @@ class ButtonSprite(Sprite):
         """
         if self.rect.collidepoint(pos):
             self.gui.display_surface.blit(self.img_hover, self.pos)
+
+
+class LightSprite(Sprite):
+    def __init__(self, pos, sheet, loc_in_sheet, _game_gui, state):
+        Sprite.__init__(self, pos, sheet, loc_in_sheet, _game_gui, (35, 35))
+        self.rect = pygame.Rect(self.pos[0], self.pos[1], 35, 35)
+        self.state = state
+        self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["on"][0], self.loc_in_sheet["on"][1], 35, 35))
+        self.img_on = self.sheet.subsurface(self.sheet.get_clip())
+
+    def get_img(self):
+        if self.state:
+            return self.img_on
+        else:
+            return self.img
+
+    def get_rect(self):
+        return self.rect
 
 
 class Button:

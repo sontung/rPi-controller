@@ -60,7 +60,8 @@ class EventLogic:
 
             elif self._game_state.get_state() == "SSH season":
                 if self._game_gui.light_switch.get_rect().collidepoint(event.pos):
-                    self.ssh_talk.command("sudo python LED.py switch")
+                    self._game_gui.command_switch("all")
+                    #self.ssh_talk.command("sudo python LED.py switch")
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):
                     self.ssh_talk.disconnect()
                     self._game_state.set_state("welcome")
