@@ -32,6 +32,10 @@ class GUI:
         self.font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
         self.typing_tag = False
 
+        # serve for flashing lights
+        self.dummy_var = 1
+        self.doneFlashing = True
+
         # states of the lights
         self.red = False
         self.green = False
@@ -48,12 +52,27 @@ class GUI:
         self.password_prompt.reset()
 
     def command_switch(self, light):
-        if light == "all":
+        if light == "all off":
+            self.red = False
+            self.green = False
+            self.yellow = False
+        elif light == "all on":
+            self.red = True
+            self.green = True
+            self.yellow = True
+        elif light == "red":
             self.red = not self.red
+        elif light == "green":
             self.green = not self.green
+        elif light == "yellow":
             self.yellow = not self.yellow
-        else:
-            light = not light
+        elif light == "flash":
+            self.doneFlashing = False
+
+    def blit_lights(self):
+        self.display_surface.blit(self.red_light.get_img(), self.red_light.get_pos())
+        self.display_surface.blit(self.green_light.get_img(), self.green_light.get_pos())
+        self.display_surface.blit(self.yellow_light.get_img(), self.yellow_light.get_pos())
 
     def make_text(self, text, color, bg_color, center):
         """
@@ -183,18 +202,69 @@ class GUI:
                                            {"on": (35, 0), "normal": (0, 0)}, self, self.green)
             self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
                                             {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
-            self.light_switch = ButtonSprite((self.window_width/4, self.window_height/4), self.button_sprites,
-                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
-            light_indication_sur, light_indication_rect = self.make_text("Light On/Off", self.text_color,
-                                                                         self.tile_color,
+            allOn_indication_sur, allOn_indication_rect = self.make_text("All On", self.text_color, self.tile_color,
                                                                          (self.window_width/8, self.window_height/4+25))
-            self.buttons = [self.light_switch, self.back]
+            allOff_indication_sur, allOff_indication_rect = self.make_text("All Off", self.text_color, self.tile_color,
+                                                                           (self.window_width/8, self.window_height*7/20+25))
+            red_indication_sur, red_indication_rect = self.make_text("Red On/Off", self.text_color, self.tile_color,
+                                                                     (self.window_width/8, self.window_height*9/20+25))
+            green_indication_sur, green_indication_rect = self.make_text("Green On/Off", self.text_color,
+                                                                         self.tile_color,
+                                                                         (self.window_width/8, self.window_height*11/20+25))
+            yellow_indication_sur, yellow_indication_rect = self.make_text("Yellow On/Off", self.text_color,
+                                                                           self.tile_color,
+                                                                           (self.window_width/8, self.window_height*13/20+25))
+            flash_indication_sur, flash_indication_rect = self.make_text("Flash", self.text_color, self.tile_color,
+                                                                         (self.window_width/8, self.window_height*15/20+25))
+            self.allOn_switch = ButtonSprite((self.window_width/4, self.window_height/4), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.allOff_switch = ButtonSprite((self.window_width/4, self.window_height*7/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.red_switch = ButtonSprite((self.window_width/4, self.window_height*9/20), self.button_sprites,
+                                           {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.green_switch = ButtonSprite((self.window_width/4, self.window_height*11/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.yellow_switch = ButtonSprite((self.window_width/4, self.window_height*13/20), self.button_sprites,
+                                              {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.flash_switch = ButtonSprite((self.window_width/4, self.window_height*15/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.buttons = [self.allOn_switch, self.allOff_switch, self.back, self.red_switch, self.green_switch,
+                            self.yellow_switch, self.flash_switch]
             self.display_surface.blit(title_sur, title_rect)
-            self.display_surface.blit(light_indication_sur, light_indication_rect)
-            self.display_surface.blit(self.light_switch.get_img(), self.light_switch.get_pos())
-            self.display_surface.blit(self.red_light.get_img(), self.red_light.get_pos())
-            self.display_surface.blit(self.green_light.get_img(), self.green_light.get_pos())
-            self.display_surface.blit(self.yellow_light.get_img(), self.yellow_light.get_pos())
+
+            # Texts
+            self.display_surface.blit(allOn_indication_sur, allOn_indication_rect)
+            self.display_surface.blit(allOff_indication_sur, allOff_indication_rect)
+            self.display_surface.blit(red_indication_sur, red_indication_rect)
+            self.display_surface.blit(green_indication_sur, green_indication_rect)
+            self.display_surface.blit(yellow_indication_sur, yellow_indication_rect)
+            self.display_surface.blit(flash_indication_sur, flash_indication_rect)
+
+            # Switches
+            self.display_surface.blit(self.allOn_switch.get_img(), self.allOn_switch.get_pos())
+            self.display_surface.blit(self.allOff_switch.get_img(), self.allOff_switch.get_pos())
+            self.display_surface.blit(self.red_switch.get_img(), self.red_switch.get_pos())
+            self.display_surface.blit(self.green_switch.get_img(), self.green_switch.get_pos())
+            self.display_surface.blit(self.yellow_switch.get_img(), self.yellow_switch.get_pos())
+            self.display_surface.blit(self.flash_switch.get_img(), self.flash_switch.get_pos())
+
+            # Lights
+            if not self.doneFlashing:
+                if self.dummy_var % 2 == 1:
+                    self.command_switch("all on")
+                    self.blit_lights()
+                if self.dummy_var % 2 == 0:
+                    self.command_switch("all off")
+                    self.blit_lights()
+                if self.dummy_var == 12:
+                    self.dummy_var = 1
+                    self.doneFlashing = True
+                else:
+                    self.dummy_var += 1
+                    if self.dummy_var > 2:
+                        pygame.time.wait(1000)
+
+            self.blit_lights()
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state.find("error") != -1:
@@ -242,7 +312,7 @@ class Sprite:
 class ButtonSprite(Sprite):
     def __init__(self, pos, sheet, loc_in_sheet, _game_gui):
         Sprite.__init__(self, pos, sheet, loc_in_sheet, _game_gui)
-        self.rect = pygame.Rect(self.pos[0], self.pos[0], 50, 50)
+        self.rect = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
         self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["hover"][0], self.loc_in_sheet["hover"][1], 50, 50))
         self.img_hover = self.sheet.subsurface(self.sheet.get_clip())
         self.sheet.set_clip(pygame.Rect(self.loc_in_sheet["pressed"][0], self.loc_in_sheet["pressed"][1], 50, 50))

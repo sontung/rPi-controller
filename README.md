@@ -2,6 +2,12 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 5th Oct
+All functions work properly with remote lights
+
+## 4th Oct
+Add light sprites
+
 ## 1st Oct
 Add nice button sprites
 

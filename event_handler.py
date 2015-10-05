@@ -54,14 +54,29 @@ class EventLogic:
                         self._game_state.set_state("error cannot connect")
                     else:
                         self._game_state.set_state("SSH season")
-                        self.ssh_talk.command("cd group12")
+                        #self.ssh_talk.command("sudo /home/pi/group12/comm/outputControl.py")
                 elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to socket
                     pass
 
             elif self._game_state.get_state() == "SSH season":
-                if self._game_gui.light_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("all")
-                    #self.ssh_talk.command("sudo python LED.py switch")
+                if self._game_gui.allOff_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("all off")
+                    self.ssh_talk.command("echo turnOff >/tmp/commandPipe")
+                elif self._game_gui.allOn_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("all on")
+                    self.ssh_talk.command("echo turnOn >/tmp/commandPipe")
+                elif self._game_gui.red_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("red")
+                    self.ssh_talk.command("echo switchRed >/tmp/commandPipe")
+                elif self._game_gui.green_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("green")
+                    self.ssh_talk.command("echo switchGreen >/tmp/commandPipe")
+                elif self._game_gui.yellow_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("yellow")
+                    self.ssh_talk.command("echo switchYellow >/tmp/commandPipe")
+                elif self._game_gui.flash_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("flash")
+                    self.ssh_talk.command("echo flash >/tmp/commandPipe")
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):
                     self.ssh_talk.disconnect()
                     self._game_state.set_state("welcome")
