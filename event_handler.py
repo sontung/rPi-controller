@@ -126,11 +126,6 @@ class EventLogic:
         elif event.type == pygame.QUIT:
             self.quit()
 
-        elif event.type == KEYUP:
-            if self._game_state.get_state() == "new season":
-                self.bluetooth_talk.command('0')
-                self._game_gui.modify_pos_pad(0)
-
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 self.quit()
