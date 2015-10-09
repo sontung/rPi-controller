@@ -2,6 +2,9 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 9th Oct
+Basically set up Pipi - voice assistant. Test includes Pipi introduces herself
+
 ## 5th Oct
 All functions work properly with remote lights
 

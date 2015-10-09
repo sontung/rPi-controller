@@ -17,10 +17,6 @@ try:
     # instead of `r.recognize_google(audio)`
     t=r.recognize_google(audio)
     print("Google Speech Recognition thinks you said " + t)
-    import pyttsx
-    engine = pyttsx.init()
-    engine.say(t)
-    engine.runAndWait()
 except sr.UnknownValueError:
     print("Google Speech Recognition could not understand audio")
 except sr.RequestError as e:
