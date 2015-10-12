@@ -2,8 +2,10 @@ import pyttsx
 
 
 class Speaker:
-    def __init__(self, name):
+    def __init__(self, name, talk, _game_gui):
         self.name = name
+        self.talk = talk
+        self._game_gui = _game_gui
         self.already_introduced = False
         self.engine = pyttsx.init()
         self.engine.setProperty('volume', 1.0)
@@ -14,9 +16,9 @@ class Speaker:
         if not self.already_introduced:
             self.already_introduced = True
             self.say('Hello, my name is %s. I\'m your assistant in our smart home '
-                     'programme. To get started, please give me a command.' % self.name)
+                     'programme. To get started, please hold Space bar to give me a command.' % self.name)
         else:
-            self.say('Hello again, how can I help you?')
+            self.say('Hello again, how can I help you? Please hold Space bar so I can hear you')
 
     def say(self, text):
         self.engine.say(text)
@@ -25,5 +27,9 @@ class Speaker:
     def react(self, text):
         if text == "hi" or text == "hello":
             self.introduce()
+        elif text == "green":
+            self._game_gui.command_switch("green")
+            #self.talk.command("echo switchGreen >/tmp/commandPipe")
+            self.say("green light is on as you commanded")
         else:
-            self.say(text)
+            pass

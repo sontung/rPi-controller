@@ -2,7 +2,10 @@ import paramiko
 import pygame
 import sys
 import core_communication
+import voice_speak
+import voice_recognition
 from pygame.locals import *
+from multiprocessing import Process, Queue
 
 
 class EventLogic:
@@ -10,20 +13,29 @@ class EventLogic:
         self._game_state = _game_state
         self._game_gui = _game_gui
         self.ssh_talk = core_communication.SSHCommunication()
+        self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self._game_gui)
+        self.pipi_ear = voice_recognition.VoiceRecognition()
         self.current_prompt = None
+        self.recording = False
         self.movement = {
             K_UP: 8,
             K_DOWN: 2,
             K_RIGHT: 6,
             K_LEFT: 4
         }
+        self.queue = Queue()
 
     def quit(self):
         pygame.quit()
         sys.exit()
 
-    def event_handler(self):
+    def pipi_listen(self):
+        print "listening"
+        out = self.pipi_ear.listen()
+        self.pipi.react(out)
 
+    def event_handler(self):
+        print "running handler"
         event = pygame.event.poll()
         if event.type == MOUSEBUTTONDOWN:
             if self._game_gui.buttons:
@@ -77,6 +89,16 @@ class EventLogic:
                 elif self._game_gui.flash_switch.get_rect().collidepoint(event.pos):
                     self._game_gui.command_switch("flash")
                     self.ssh_talk.command("echo flash >/tmp/commandPipe")
+                elif self._game_gui.voice_mode.get_rect().collidepoint(event.pos):
+                    self._game_state.set_state("SSH season voice mode")
+                    self.pipi.introduce()
+                elif self._game_gui.back.get_rect().collidepoint(event.pos):
+                    self.ssh_talk.disconnect()
+                    self._game_state.set_state("welcome")
+
+            elif self._game_state.get_state() == "SSH season voice mode":
+                if self._game_gui.button_mode.get_rect().collidepoint(event.pos):
+                    self._game_state.set_state("SSH season")
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):
                     self.ssh_talk.disconnect()
                     self._game_state.set_state("welcome")
@@ -130,12 +152,10 @@ class EventLogic:
             if event.key == K_ESCAPE:
                 self.quit()
 
-            elif event.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT]:
-                if self._game_state.get_state() == "new season":
-                    while pygame.key.get_pressed()[event.key]:
-                        self._game_gui.modify_pos_pad(self.movement[event.key])
-                        self.bluetooth_talk.command(str(self.movement[event.key]))
-                        self.event_handler()
+            elif event.key == K_SPACE:
+                if self._game_state.get_state() == "SSH season voice mode":
+                    self._game_gui.recording = not self._game_gui.recording
+                    self._game_gui.draw(self._game_state.get_state())
 
             else:
                 if self._game_gui.typing_tag:

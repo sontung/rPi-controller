@@ -31,6 +31,7 @@ class GUI:
         self.font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
         self.font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
         self.typing_tag = False
+        self.recording = False
 
         # serve for flashing lights
         self.dummy_var = 1
@@ -196,6 +197,7 @@ class GUI:
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.voice_mode = Button("Voice mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
             self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
                                          {"on": (105, 0), "normal": (0, 0)}, self, self.red)
             self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
@@ -229,7 +231,7 @@ class GUI:
             self.flash_switch = ButtonSprite((self.window_width/4, self.window_height*15/20), self.button_sprites,
                                              {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
             self.buttons = [self.allOn_switch, self.allOff_switch, self.back, self.red_switch, self.green_switch,
-                            self.yellow_switch, self.flash_switch]
+                            self.yellow_switch, self.flash_switch, self.voice_mode]
             self.display_surface.blit(title_sur, title_rect)
 
             # Texts
@@ -265,6 +267,45 @@ class GUI:
                         pygame.time.wait(1000)
 
             self.blit_lights()
+            self.display_surface.blit(self.voice_mode.get_sr()[0], self.voice_mode.get_sr()[1])
+            self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
+        elif state == "SSH season voice mode":
+            title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/10))
+            recording_sur, recording_rect = self.make_text("recording ...", self.text_color, self.tile_color,
+                                                           (100, self.window_height/4))
+            self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.button_mode = Button("Button mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
+            self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
+                                         {"on": (105, 0), "normal": (0, 0)}, self, self.red)
+            self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
+                                           {"on": (35, 0), "normal": (0, 0)}, self, self.green)
+            self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
+                                            {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
+            self.buttons = [self.back, self.button_mode]
+            self.display_surface.blit(title_sur, title_rect)
+            if self.recording:
+                self.display_surface.blit(recording_sur, recording_rect)
+
+            # Lights
+            if not self.doneFlashing:
+                if self.dummy_var % 2 == 1:
+                    self.command_switch("all on")
+                    self.blit_lights()
+                if self.dummy_var % 2 == 0:
+                    self.command_switch("all off")
+                    self.blit_lights()
+                if self.dummy_var == 12:
+                    self.dummy_var = 1
+                    self.doneFlashing = True
+                else:
+                    self.dummy_var += 1
+                    if self.dummy_var > 2:
+                        pygame.time.wait(1000)
+
+            self.blit_lights()
+            self.display_surface.blit(self.button_mode.get_sr()[0], self.button_mode.get_sr()[1])
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state.find("error") != -1:
