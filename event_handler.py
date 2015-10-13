@@ -5,7 +5,8 @@ import core_communication
 import voice_speak
 import voice_recognition
 from pygame.locals import *
-from multiprocessing import Process, Queue
+from multiprocessing import Queue
+from collections import deque
 
 
 class EventLogic:
@@ -16,26 +17,23 @@ class EventLogic:
         self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self._game_gui)
         self.pipi_ear = voice_recognition.VoiceRecognition()
         self.current_prompt = None
-        self.recording = False
         self.movement = {
             K_UP: 8,
             K_DOWN: 2,
             K_RIGHT: 6,
             K_LEFT: 4
         }
-        self.queue = Queue()
+        self.queue = deque()
 
     def quit(self):
         pygame.quit()
         sys.exit()
 
     def pipi_listen(self):
-        print "listening"
         out = self.pipi_ear.listen()
         self.pipi.react(out)
 
     def event_handler(self):
-        print "running handler"
         event = pygame.event.poll()
         if event.type == MOUSEBUTTONDOWN:
             if self._game_gui.buttons:
@@ -153,9 +151,8 @@ class EventLogic:
                 self.quit()
 
             elif event.key == K_SPACE:
-                if self._game_state.get_state() == "SSH season voice mode":
-                    self._game_gui.recording = not self._game_gui.recording
-                    self._game_gui.draw(self._game_state.get_state())
+                self._game_gui.recording = not self._game_gui.recording
+                self.queue.append(self._game_gui.recording)
 
             else:
                 if self._game_gui.typing_tag:

@@ -26,10 +26,10 @@ if __name__ == "__main__":
     h.start()
     while True:
         val1 = q.get()
-        if val1 == [True]:
+        if val1:
             print "start listening"
             l.start()
-        elif val1 == [False]:
+        else:
             print "terminate"
             l.terminate()
             l.join()

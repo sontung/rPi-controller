@@ -2,30 +2,23 @@ import pygame
 import gui
 import state
 import event_handler
-import threading
-from multiprocessing import Process, Queue
+from pygame.locals import *
+from multiprocessing import Process
 
 
-class MyThread(threading.Thread):
-    def __init__(self, name, method_run, optional=None):
-        threading.Thread.__init__(self)
-        self.name = name
-        self.method_run = method_run
-        self.optional = optional
-
-    def run(self):
-        print self.name
-        if self.optional:
-            self.method_run(self.optional())
-        else:
-            self.method_run()
+def background_process(recording, _game_state, queue):
+    event = pygame.event.poll()
+    if event == KEYDOWN:
+        if event.key == K_SPACE:
+            print "handling"
+            if _game_state.get_state() == "SSH season voice mode":
+                recording = not recording
+                queue.put([recording])
 
 
-def handler1():
-    game_event_handler.event_handler()
-
-def listener1():
-    game_event_handler.pipi_listen()
+def voice_listener(_event_handler):
+    print "listening"
+    _event_handler.pipi_listen()
 
 
 if __name__ == "__main__":
@@ -33,20 +26,22 @@ if __name__ == "__main__":
     game_state = state.GameState()
     game_state.set_state("SSH season voice mode")
     game_gui = gui.GUI(game_state)
-    global game_event_handler
     game_event_handler = event_handler.EventLogic(game_state, game_gui)
     game_gui.draw(game_state.get_state())
     pygame.display.update()
+    listeningProcess = Process(target=voice_listener, args=(game_event_handler,))
     while True:
         game_gui.draw(game_state.get_state())
-        handler = Process(target=handler1)
-        handler.start()
-        listener = Process(target=listener1)
-        if game_gui.recording:
-            listener.start()
-        else:
-            if listener.is_alive():
-                listener.terminate()
-                listener.join()
+        game_event_handler.event_handler()
+        if not len(game_event_handler.queue) == 0:
+            val = game_event_handler.queue.pop()
+            if val:
+                print "start listening"
+                listeningProcess.start()
+            else:
+                print "terminating"
+                listeningProcess.terminate()
+                listeningProcess.join()
+                listeningProcess = Process(target=voice_listener, args=(game_event_handler,))
         pygame.display.update()
         FPS_clock.tick(30)

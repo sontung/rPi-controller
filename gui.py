@@ -28,8 +28,6 @@ class GUI:
         pygame.display.set_caption("Light Controlling Interface")
         self.button_sprites = pygame.image.load("assets\\images\\buttons.png")
         self.light_sprites = pygame.image.load("assets\\images\\leds.png")
-        self.font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
-        self.font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
         self.typing_tag = False
         self.recording = False
 
@@ -79,7 +77,8 @@ class GUI:
         """
         Make a text object for drawing
         """
-        text_surf = self.font.render(text, True, color, bg_color)
+        font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
+        text_surf = font.render(text, True, color, bg_color)
         text_rect = text_surf.get_rect()
         text_rect.center = center
         return text_surf, text_rect
@@ -89,14 +88,6 @@ class GUI:
         Decide whether you want to type or not.
         """
         self.typing_tag = val
-
-    def modify_pos_pad(self, command):
-        """
-        Modify the position of the pad according to movement.
-        :return:
-        """
-        self.pos_pad_indication = self.pos_pad_modify_indication[command]
-        self.pos_pad = self.pos_pad_modify_command[command]
 
     def draw(self, state):
         """
@@ -400,9 +391,9 @@ class Button:
         self.color = color
         self.bg_color = bg_color
         self.bold = False
-        self.font = self.gui.font
-        self.font_bold = self.gui.font_bold
-        self.surf = self.font.render(text, True, color, bg_color)
+        self.font_size = 40
+        font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
+        self.surf = font.render(text, True, color, bg_color)
         self.rect = self.surf.get_rect()
         self.rect.center = self.center
 
@@ -411,9 +402,11 @@ class Button:
         Make a text object for drawing
         """
         if not self.bold:
-            text_surf = self.font.render(self.text, True, self.color, self.bg_color)
+            font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
+            text_surf = font.render(self.text, True, self.color, self.bg_color)
         else:
-            text_surf = self.font_bold.render(self.text, True, self.color, self.bg_color)
+            font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
+            text_surf = font_bold.render(self.text, True, self.color, self.bg_color)
         text_rect = text_surf.get_rect()
         text_rect.center = self.center
         return text_surf, text_rect
@@ -450,7 +443,7 @@ class Prompt:
         self.color = _gui.text_color
         self.bg_color = _gui.colors["white"]
         self.topleft = topleft
-        self.font = _gui.font
+        self.font_size = 40
         self.rect = pygame.Rect(self.topleft[0], self.topleft[1], 360, 70)
 
     def draw_rect(self):
@@ -467,10 +460,11 @@ class Prompt:
         """
         Make a text object for drawing
         """
+        font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
         if color is None:
-            text_surf = self.font.render(text, True, self.color, self.colors["turquoise blue"])
+            text_surf = font.render(text, True, self.color, self.colors["turquoise blue"])
         else:
-            text_surf = self.font.render(text, True, color, self.bg_color)
+            text_surf = font.render(text, True, color, self.bg_color)
         text_rect = text_surf.get_rect()
         text_rect.topleft = (self.topleft[0]+1, self.topleft[1]+3)
         return text_surf, text_rect

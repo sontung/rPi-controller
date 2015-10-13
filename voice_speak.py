@@ -12,6 +12,15 @@ class Speaker:
         self.engine.setProperty('voice',
                                 "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-GB_HAZEL_10.0")
 
+    def __getstate__(self):
+        odict = self.__dict__.copy()
+        del odict["engine"]
+        return odict
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+        self.engine = pyttsx.init()
+
     def introduce(self):
         if not self.already_introduced:
             self.already_introduced = True
