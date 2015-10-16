@@ -4,8 +4,8 @@ import sys
 import core_communication
 import voice_speak
 import voice_recognition
+import time
 from pygame.locals import *
-from multiprocessing import Queue
 from collections import deque
 
 
@@ -14,7 +14,7 @@ class EventLogic:
         self._game_state = _game_state
         self._game_gui = _game_gui
         self.ssh_talk = core_communication.SSHCommunication()
-        self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self._game_gui)
+        self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, _game_gui)
         self.pipi_ear = voice_recognition.VoiceRecognition()
         self.current_prompt = None
         self.movement = {
@@ -23,17 +23,30 @@ class EventLogic:
             K_RIGHT: 6,
             K_LEFT: 4
         }
-        self.queue = deque()
+        self.queue = deque()  # Information channel for listening process
+        self.last_voice_command = 0.0
 
     def quit(self):
         pygame.quit()
         sys.exit()
 
+    def check_last_voice_command(self):
+        """
+        If nothing commanded since last command or last
+        introduction, Pipi introduces again in 20s
+        :return:
+        """
+        if self._game_state.get_state() == "SSH season voice mode":
+            if time.time() - self.last_voice_command >= 20.0:
+                self.pipi.introduce()
+                self.last_voice_command = time.time()
+
     def pipi_listen(self):
         out = self.pipi_ear.listen()
-        self.pipi.react(out)
+        return self.pipi.react(out)
 
     def event_handler(self):
+        self.check_last_voice_command()
         event = pygame.event.poll()
         if event.type == MOUSEBUTTONDOWN:
             if self._game_gui.buttons:
@@ -80,7 +93,7 @@ class EventLogic:
                     self.ssh_talk.command("echo switchRed >/tmp/commandPipe")
                 elif self._game_gui.green_switch.get_rect().collidepoint(event.pos):
                     self._game_gui.command_switch("green")
-                    self.ssh_talk.command("echo switchGreen >/tmp/commandPipe")
+                    #self.ssh_talk.command("echo switchGreen >/tmp/commandPipe")
                 elif self._game_gui.yellow_switch.get_rect().collidepoint(event.pos):
                     self._game_gui.command_switch("yellow")
                     self.ssh_talk.command("echo switchYellow >/tmp/commandPipe")
@@ -152,6 +165,8 @@ class EventLogic:
 
             elif event.key == K_SPACE:
                 self._game_gui.recording = not self._game_gui.recording
+                if not self._game_gui.recording:
+                    self.last_voice_command = time.time()
                 self.queue.append(self._game_gui.recording)
 
             else:

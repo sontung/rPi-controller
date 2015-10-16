@@ -11,9 +11,9 @@ class VoiceRecognition:
                 # listen for 1 second to calibrate the energy threshold for ambient noise levels
                 self.recognizer.adjust_for_ambient_noise(source)
                 print("Say something!")
-                self.audio = self.recognizer.listen(source)
+                audio = self.recognizer.listen(source)
             try:
-                text = self.recognizer.recognize_google(self.audio)
+                text = self.recognizer.recognize_google(audio)
                 print("Google Speech Recognition thinks you said " + text)
                 return text
             except speech_recognition.UnknownValueError:

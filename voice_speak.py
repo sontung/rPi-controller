@@ -25,9 +25,9 @@ class Speaker:
         if not self.already_introduced:
             self.already_introduced = True
             self.say('Hello, my name is %s. I\'m your assistant in our smart home '
-                     'programme. To get started, please hold Space bar to give me a command.' % self.name)
+                     'programme. To get started, press Space bar to give me a command.' % self.name)
         else:
-            self.say('Hello again, how can I help you? Please hold Space bar so I can hear you')
+            self.say('Hello again, how can I help you? Press Space bar so I can hear you')
 
     def say(self, text):
         self.engine.say(text)
@@ -36,9 +36,18 @@ class Speaker:
     def react(self, text):
         if text == "hi" or text == "hello":
             self.introduce()
+            return None
         elif text == "green":
-            self._game_gui.command_switch("green")
             #self.talk.command("echo switchGreen >/tmp/commandPipe")
             self.say("green light is on as you commanded")
+            return "green"
+        elif text == "red":
+            #self.talk.command("echo switchRed >/tmp/commandPipe")
+            self.say("red light is on as you commanded")
+            return "red"
+        elif text == "yellow":
+            #self.talk.command("echo switchYellow >/tmp/commandPipe")
+            self.say("yellow light is on as you commanded")
+            return "yellow"
         else:
             pass

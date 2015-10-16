@@ -51,6 +51,11 @@ class GUI:
         self.password_prompt.reset()
 
     def command_switch(self, light):
+        """
+        Change the states of lights
+        :param light:
+        :return:
+        """
         if light == "all off":
             self.red = False
             self.green = False
@@ -69,6 +74,11 @@ class GUI:
             self.doneFlashing = False
 
     def blit_lights(self):
+        """
+        Make changes to the GUI according to the states
+        of the lights
+        :return:
+        """
         self.display_surface.blit(self.red_light.get_img(), self.red_light.get_pos())
         self.display_surface.blit(self.green_light.get_img(), self.green_light.get_pos())
         self.display_surface.blit(self.yellow_light.get_img(), self.yellow_light.get_pos())
@@ -322,6 +332,9 @@ class GUI:
 
 
 class Sprite:
+    """
+    Class for handling sprites
+    """
     def __init__(self, pos, sheet, loc_in_sheet, _game_gui, dim=None):
         self.sheet = sheet
         self.loc_in_sheet = loc_in_sheet  # a dictionary keeping track of each movement and their sprites
@@ -342,6 +355,9 @@ class Sprite:
 
 
 class ButtonSprite(Sprite):
+    """
+    Child class for handling button sprites specifically
+    """
     def __init__(self, pos, sheet, loc_in_sheet, _game_gui):
         Sprite.__init__(self, pos, sheet, loc_in_sheet, _game_gui)
         self.rect = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
@@ -354,6 +370,9 @@ class ButtonSprite(Sprite):
         return self.rect
 
     def set_pressed(self, pos):
+        """
+        Highlight the button when the user clicks mouse on
+        """
         if self.rect.collidepoint(pos):
             self.gui.display_surface.blit(self.img_pressed, self.pos)
 
@@ -366,6 +385,9 @@ class ButtonSprite(Sprite):
 
 
 class LightSprite(Sprite):
+    """
+    Child class for handling light sprites specifically
+    """
     def __init__(self, pos, sheet, loc_in_sheet, _game_gui, state):
         Sprite.__init__(self, pos, sheet, loc_in_sheet, _game_gui, (35, 35))
         self.rect = pygame.Rect(self.pos[0], self.pos[1], 35, 35)
@@ -384,6 +406,9 @@ class LightSprite(Sprite):
 
 
 class Button:
+    """
+    Class for handling buttons
+    """
     def __init__(self, text, color, bg_color, center, _game_gui):
         self.gui = _game_gui
         self.text = text
@@ -434,6 +459,9 @@ class Button:
 
 
 class Prompt:
+    """
+    Prompt which takes input keyboard from user as a string
+    """
     def __init__(self, topleft, _gui, title=""):
         self.title = title
         self.string = ""
