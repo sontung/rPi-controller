@@ -102,6 +102,7 @@ class EventLogic:
                     self.ssh_talk.command("echo flash >/tmp/commandPipe")
                 elif self._game_gui.voice_mode.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("SSH season voice mode")
+                    self.last_voice_command = time.time()
                     self.pipi.introduce()
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):
                     self.ssh_talk.disconnect()

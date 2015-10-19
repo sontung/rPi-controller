@@ -40,6 +40,12 @@ if __name__ == "__main__":
                 listeningProcess.join()
                 listeningProcess = Process(target=voice_listener, args=(game_event_handler, commandQueue,))
         if not commandQueue.empty():
-            game_gui.command_switch(commandQueue.get())
+            voice_command = commandQueue.get()
+            game_gui.command_switch(voice_command[0])
+            try:
+                game_event_handler.pipi.say(voice_command[1] %
+                                            game_gui.bool_to_text[str(game_gui.light_to_string[voice_command[0]])])
+            except KeyError:
+                pass
         pygame.display.update()
         FPS_clock.tick(30)

@@ -2,6 +2,9 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 17th Oct
+Improve Pipi
+
 ## 16th Oct
 Basically have Pipi working with the app
 

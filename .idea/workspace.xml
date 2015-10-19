@@ -6,10 +6,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/event_handler.py" afterPath="$PROJECT_DIR$/event_handler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gui.py" afterPath="$PROJECT_DIR$/gui.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/picklable_test.py" afterPath="$PROJECT_DIR$/picklable_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/voice_recognition.py" afterPath="$PROJECT_DIR$/voice_recognition.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/voice_speak.py" afterPath="$PROJECT_DIR$/voice_speak.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/voice_test.py" afterPath="$PROJECT_DIR$/voice_test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="rPi-controller.iws" />
@@ -33,9 +30,6 @@
     <leaf>
       <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
-          <provider editor-type-id="MultiMarkdownFxPreviewEditor">
-            <state />
-          </provider>
           <provider editor-type-id="MarkdownPreviewEditor">
             <state />
           </provider>
@@ -43,10 +37,13 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.8148148">
-              <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="16" column="10" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="MultiMarkdownFxPreviewEditor">
+            <state />
           </provider>
         </entry>
       </file>
@@ -54,10 +51,49 @@
         <entry file="file://$PROJECT_DIR$/event_handler.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <caret line="104" column="57" selection-start-line="104" selection-start-column="57" selection-end-line="104" selection-end-column="57" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gui.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gui.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="115" column="88" selection-start-line="115" selection-start-column="88" selection-end-line="115" selection-end-column="88" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+                <element signature="e#2194#2288#0" expanded="false" />
+                <element signature="e#2335#3036#0" expanded="false" />
+                <element signature="e#3073#3451#0" expanded="false" />
+                <element signature="e#3517#3834#0" expanded="false" />
+                <element signature="e#3879#3972#0" expanded="false" />
+                <element signature="e#21617#22419#0" expanded="false" />
+                <element signature="e#22454#23583#0" expanded="false" />
+                <element signature="e#23617#24264#0" expanded="false" />
+                <element signature="e#24285#25926#0" expanded="false" />
+                <element signature="e#24402#24822#0" expanded="false" />
+                <element signature="e#24857#25420#0" expanded="false" />
+                <element signature="e#25947#28264#0" expanded="false" />
+                <element signature="e#26076#26427#0" expanded="false" />
+                <element signature="e#26462#26745#0" expanded="false" />
+                <element signature="e#26798#27288#0" expanded="false" />
+                <element signature="e#27329#27532#0" expanded="false" />
+                <marker date="1445279607315" expanded="false" signature="4542:17591" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="process.py" pinned="false" current-in-tab="false">
+        <entry file="file://C:/Python27/Lib/multiprocessing/process.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -66,7 +102,7 @@
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
+              <caret line="32" column="9" selection-start-line="32" selection-start-column="9" selection-end-line="32" selection-end-column="9" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -77,8 +113,8 @@
       <file leaf-file-name="voice_speak.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/voice_speak.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.5405405">
-              <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+            <state vertical-scroll-proportion="1.0">
+              <caret line="66" column="24" selection-start-line="66" selection-start-column="24" selection-end-line="66" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -88,38 +124,8 @@
         <entry file="file://$PROJECT_DIR$/voice_recognition.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="56" selection-start-line="15" selection-start-column="56" selection-end-line="15" selection-end-column="56" />
+              <caret line="12" column="39" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gui.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gui.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="10" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-                <element signature="e#42#20659#0" expanded="false" />
-                <element signature="e#83#1875#0" expanded="false" />
-                <element signature="e#1914#2008#0" expanded="false" />
-                <element signature="e#2055#2668#0" expanded="false" />
-                <element signature="e#2705#3083#0" expanded="false" />
-                <element signature="e#3149#3466#0" expanded="false" />
-                <element signature="e#3511#3604#0" expanded="false" />
-                <element signature="e#3641#20659#0" expanded="false" />
-                <element signature="e#20680#21482#0" expanded="false" />
-                <element signature="e#21517#22646#0" expanded="false" />
-                <element signature="e#22680#23327#0" expanded="false" />
-                <element signature="e#23348#24989#0" expanded="false" />
-                <element signature="e#23465#23885#0" expanded="false" />
-                <element signature="e#23920#24483#0" expanded="false" />
-                <element signature="e#25139#25490#0" expanded="false" />
-                <element signature="e#25525#25808#0" expanded="false" />
-                <element signature="e#25861#26351#0" expanded="false" />
-                <element signature="e#26392#26595#0" expanded="false" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -156,10 +162,10 @@
         <option value="$PROJECT_DIR$/picklable_test.py" />
         <option value="$PROJECT_DIR$/voice_test.py" />
         <option value="$PROJECT_DIR$/voice_recognition.py" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/event_handler.py" />
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/gui.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/voice_speak.py" />
       </list>
     </option>
@@ -443,14 +449,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17862372" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32967034" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2621664" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -463,6 +468,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32967034" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -499,7 +505,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="12" />
+      <option name="time" value="13" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -530,24 +536,23 @@
           <caret line="395" column="19" selection-start-line="395" selection-start-column="19" selection-end-line="395" selection-end-column="19" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#42#20659#0" expanded="false" />
-            <element signature="e#83#1875#0" expanded="false" />
-            <element signature="e#1914#2008#0" expanded="false" />
-            <element signature="e#2055#2668#0" expanded="false" />
-            <element signature="e#2705#3083#0" expanded="false" />
-            <element signature="e#3149#3466#0" expanded="false" />
-            <element signature="e#3511#3604#0" expanded="false" />
-            <element signature="e#3641#20659#0" expanded="false" />
-            <element signature="e#20680#21482#0" expanded="false" />
-            <element signature="e#21517#22646#0" expanded="false" />
-            <element signature="e#22680#23327#0" expanded="false" />
-            <element signature="e#23348#24989#0" expanded="false" />
-            <element signature="e#23465#23885#0" expanded="false" />
-            <element signature="e#23920#24483#0" expanded="false" />
-            <element signature="e#25139#25490#0" expanded="false" />
-            <element signature="e#25525#25808#0" expanded="false" />
-            <element signature="e#25861#26351#0" expanded="false" />
-            <element signature="e#26392#26595#0" expanded="false" />
+            <element signature="e#2194#2288#0" expanded="false" />
+            <element signature="e#2335#3036#0" expanded="false" />
+            <element signature="e#3073#3451#0" expanded="false" />
+            <element signature="e#3517#3834#0" expanded="false" />
+            <element signature="e#3879#3972#0" expanded="false" />
+            <element signature="e#21617#22419#0" expanded="false" />
+            <element signature="e#22454#23583#0" expanded="false" />
+            <element signature="e#23617#24264#0" expanded="false" />
+            <element signature="e#24285#25926#0" expanded="false" />
+            <element signature="e#24402#24822#0" expanded="false" />
+            <element signature="e#24857#25420#0" expanded="false" />
+            <element signature="e#25947#28264#0" expanded="false" />
+            <element signature="e#26076#26427#0" expanded="false" />
+            <element signature="e#26462#26745#0" expanded="false" />
+            <element signature="e#26798#27288#0" expanded="false" />
+            <element signature="e#27329#27532#0" expanded="false" />
+            <marker date="1445279607315" expanded="false" signature="4542:17591" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -599,9 +604,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MultiMarkdownFxPreviewEditor">
-        <state />
-      </provider>
       <provider editor-type-id="MarkdownPreviewEditor">
         <state />
       </provider>
@@ -613,6 +615,9 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="MultiMarkdownFxPreviewEditor">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
@@ -628,24 +633,23 @@
           <caret line="0" column="13" selection-start-line="0" selection-start-column="13" selection-end-line="0" selection-end-column="13" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#42#20659#0" expanded="false" />
-            <element signature="e#83#1875#0" expanded="false" />
-            <element signature="e#1914#2008#0" expanded="false" />
-            <element signature="e#2055#2668#0" expanded="false" />
-            <element signature="e#2705#3083#0" expanded="false" />
-            <element signature="e#3149#3466#0" expanded="false" />
-            <element signature="e#3511#3604#0" expanded="false" />
-            <element signature="e#3641#20659#0" expanded="false" />
-            <element signature="e#20680#21482#0" expanded="false" />
-            <element signature="e#21517#22646#0" expanded="false" />
-            <element signature="e#22680#23327#0" expanded="false" />
-            <element signature="e#23348#24989#0" expanded="false" />
-            <element signature="e#23465#23885#0" expanded="false" />
-            <element signature="e#23920#24483#0" expanded="false" />
-            <element signature="e#25139#25490#0" expanded="false" />
-            <element signature="e#25525#25808#0" expanded="false" />
-            <element signature="e#25861#26351#0" expanded="false" />
-            <element signature="e#26392#26595#0" expanded="false" />
+            <element signature="e#2194#2288#0" expanded="false" />
+            <element signature="e#2335#3036#0" expanded="false" />
+            <element signature="e#3073#3451#0" expanded="false" />
+            <element signature="e#3517#3834#0" expanded="false" />
+            <element signature="e#3879#3972#0" expanded="false" />
+            <element signature="e#21617#22419#0" expanded="false" />
+            <element signature="e#22454#23583#0" expanded="false" />
+            <element signature="e#23617#24264#0" expanded="false" />
+            <element signature="e#24285#25926#0" expanded="false" />
+            <element signature="e#24402#24822#0" expanded="false" />
+            <element signature="e#24857#25420#0" expanded="false" />
+            <element signature="e#25947#28264#0" expanded="false" />
+            <element signature="e#26076#26427#0" expanded="false" />
+            <element signature="e#26462#26745#0" expanded="false" />
+            <element signature="e#26798#27288#0" expanded="false" />
+            <element signature="e#27329#27532#0" expanded="false" />
+            <marker date="1445279607315" expanded="false" signature="4542:17591" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -675,9 +679,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MultiMarkdownFxPreviewEditor">
-        <state />
-      </provider>
       <provider editor-type-id="MarkdownPreviewEditor">
         <state />
       </provider>
@@ -690,6 +691,9 @@
           <folding />
         </state>
       </provider>
+      <provider editor-type-id="MultiMarkdownFxPreviewEditor">
+        <state />
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -704,24 +708,23 @@
           <caret line="49" column="55" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#42#20659#0" expanded="false" />
-            <element signature="e#83#1875#0" expanded="false" />
-            <element signature="e#1914#2008#0" expanded="false" />
-            <element signature="e#2055#2668#0" expanded="false" />
-            <element signature="e#2705#3083#0" expanded="false" />
-            <element signature="e#3149#3466#0" expanded="false" />
-            <element signature="e#3511#3604#0" expanded="false" />
-            <element signature="e#3641#20659#0" expanded="false" />
-            <element signature="e#20680#21482#0" expanded="false" />
-            <element signature="e#21517#22646#0" expanded="false" />
-            <element signature="e#22680#23327#0" expanded="false" />
-            <element signature="e#23348#24989#0" expanded="false" />
-            <element signature="e#23465#23885#0" expanded="false" />
-            <element signature="e#23920#24483#0" expanded="false" />
-            <element signature="e#25139#25490#0" expanded="false" />
-            <element signature="e#25525#25808#0" expanded="false" />
-            <element signature="e#25861#26351#0" expanded="false" />
-            <element signature="e#26392#26595#0" expanded="false" />
+            <element signature="e#2194#2288#0" expanded="false" />
+            <element signature="e#2335#3036#0" expanded="false" />
+            <element signature="e#3073#3451#0" expanded="false" />
+            <element signature="e#3517#3834#0" expanded="false" />
+            <element signature="e#3879#3972#0" expanded="false" />
+            <element signature="e#21617#22419#0" expanded="false" />
+            <element signature="e#22454#23583#0" expanded="false" />
+            <element signature="e#23617#24264#0" expanded="false" />
+            <element signature="e#24285#25926#0" expanded="false" />
+            <element signature="e#24402#24822#0" expanded="false" />
+            <element signature="e#24857#25420#0" expanded="false" />
+            <element signature="e#25947#28264#0" expanded="false" />
+            <element signature="e#26076#26427#0" expanded="false" />
+            <element signature="e#26462#26745#0" expanded="false" />
+            <element signature="e#26798#27288#0" expanded="false" />
+            <element signature="e#27329#27532#0" expanded="false" />
+            <marker date="1445279607315" expanded="false" signature="4542:17591" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -771,24 +774,23 @@
           <caret line="49" column="55" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#42#20659#0" expanded="false" />
-            <element signature="e#83#1875#0" expanded="false" />
-            <element signature="e#1914#2008#0" expanded="false" />
-            <element signature="e#2055#2668#0" expanded="false" />
-            <element signature="e#2705#3083#0" expanded="false" />
-            <element signature="e#3149#3466#0" expanded="false" />
-            <element signature="e#3511#3604#0" expanded="false" />
-            <element signature="e#3641#20659#0" expanded="false" />
-            <element signature="e#20680#21482#0" expanded="false" />
-            <element signature="e#21517#22646#0" expanded="false" />
-            <element signature="e#22680#23327#0" expanded="false" />
-            <element signature="e#23348#24989#0" expanded="false" />
-            <element signature="e#23465#23885#0" expanded="false" />
-            <element signature="e#23920#24483#0" expanded="false" />
-            <element signature="e#25139#25490#0" expanded="false" />
-            <element signature="e#25525#25808#0" expanded="false" />
-            <element signature="e#25861#26351#0" expanded="false" />
-            <element signature="e#26392#26595#0" expanded="false" />
+            <element signature="e#2194#2288#0" expanded="false" />
+            <element signature="e#2335#3036#0" expanded="false" />
+            <element signature="e#3073#3451#0" expanded="false" />
+            <element signature="e#3517#3834#0" expanded="false" />
+            <element signature="e#3879#3972#0" expanded="false" />
+            <element signature="e#21617#22419#0" expanded="false" />
+            <element signature="e#22454#23583#0" expanded="false" />
+            <element signature="e#23617#24264#0" expanded="false" />
+            <element signature="e#24285#25926#0" expanded="false" />
+            <element signature="e#24402#24822#0" expanded="false" />
+            <element signature="e#24857#25420#0" expanded="false" />
+            <element signature="e#25947#28264#0" expanded="false" />
+            <element signature="e#26076#26427#0" expanded="false" />
+            <element signature="e#26462#26745#0" expanded="false" />
+            <element signature="e#26798#27288#0" expanded="false" />
+            <element signature="e#27329#27532#0" expanded="false" />
+            <marker date="1445279607315" expanded="false" signature="4542:17591" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -935,53 +937,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/multiprocessing/process.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3603604">
-          <caret line="87" column="0" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="10" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#42#20659#0" expanded="false" />
-            <element signature="e#83#1875#0" expanded="false" />
-            <element signature="e#1914#2008#0" expanded="false" />
-            <element signature="e#2055#2668#0" expanded="false" />
-            <element signature="e#2705#3083#0" expanded="false" />
-            <element signature="e#3149#3466#0" expanded="false" />
-            <element signature="e#3511#3604#0" expanded="false" />
-            <element signature="e#3641#20659#0" expanded="false" />
-            <element signature="e#20680#21482#0" expanded="false" />
-            <element signature="e#21517#22646#0" expanded="false" />
-            <element signature="e#22680#23327#0" expanded="false" />
-            <element signature="e#23348#24989#0" expanded="false" />
-            <element signature="e#23465#23885#0" expanded="false" />
-            <element signature="e#23920#24483#0" expanded="false" />
-            <element signature="e#25139#25490#0" expanded="false" />
-            <element signature="e#25525#25808#0" expanded="false" />
-            <element signature="e#25861#26351#0" expanded="false" />
-            <element signature="e#26392#26595#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/voice_recognition.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="56" selection-start-line="15" selection-start-column="56" selection-end-line="15" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MultiMarkdownFxPreviewEditor">
-        <state />
-      </provider>
       <provider editor-type-id="MarkdownPreviewEditor">
         <state />
       </provider>
@@ -989,8 +945,37 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.8148148">
-          <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="10" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="MultiMarkdownFxPreviewEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/voice_recognition.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="39" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="9" selection-start-line="32" selection-start-column="9" selection-end-line="32" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python27/Lib/multiprocessing/process.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -998,27 +983,44 @@
     <entry file="file://$PROJECT_DIR$/event_handler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <caret line="104" column="57" selection-start-line="104" selection-start-column="57" selection-end-line="104" selection-end-column="57" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/gui.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
+          <caret line="115" column="88" selection-start-line="115" selection-start-column="88" selection-end-line="115" selection-end-column="88" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#2194#2288#0" expanded="false" />
+            <element signature="e#2335#3036#0" expanded="false" />
+            <element signature="e#3073#3451#0" expanded="false" />
+            <element signature="e#3517#3834#0" expanded="false" />
+            <element signature="e#3879#3972#0" expanded="false" />
+            <element signature="e#21617#22419#0" expanded="false" />
+            <element signature="e#22454#23583#0" expanded="false" />
+            <element signature="e#23617#24264#0" expanded="false" />
+            <element signature="e#24285#25926#0" expanded="false" />
+            <element signature="e#24402#24822#0" expanded="false" />
+            <element signature="e#24857#25420#0" expanded="false" />
+            <element signature="e#25947#28264#0" expanded="false" />
+            <element signature="e#26076#26427#0" expanded="false" />
+            <element signature="e#26462#26745#0" expanded="false" />
+            <element signature="e#26798#27288#0" expanded="false" />
+            <element signature="e#27329#27532#0" expanded="false" />
+            <marker date="1445279607315" expanded="false" signature="4542:17591" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/voice_speak.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5405405">
-          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+        <state vertical-scroll-proportion="1.0">
+          <caret line="66" column="24" selection-start-line="66" selection-start-column="24" selection-end-line="66" selection-end-column="24" />
           <folding />
         </state>
       </provider>

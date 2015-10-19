@@ -1,5 +1,7 @@
 import pygame
 import sys
+import time
+import threading
 
 
 class GUI:
@@ -30,6 +32,8 @@ class GUI:
         self.light_sprites = pygame.image.load("assets\\images\\leds.png")
         self.typing_tag = False
         self.recording = False
+        self.time_recording = None  # the moment the user records
+        self.set_time_recording = True
 
         # serve for flashing lights
         self.dummy_var = 1
@@ -39,6 +43,9 @@ class GUI:
         self.red = False
         self.green = False
         self.yellow = False
+
+        self.light_to_string = dict(red=self.red, green=self.green, yellow=self.yellow)
+        self.bool_to_text = dict(True="on", False="off")
 
         # for setting up information for communication
         self.host_prompt = Prompt((self.window_width/4, self.window_height/3), self, "host")
@@ -72,6 +79,7 @@ class GUI:
             self.yellow = not self.yellow
         elif light == "flash":
             self.doneFlashing = False
+        self.light_to_string = dict(red=self.red, green=self.green, yellow=self.yellow)
 
     def blit_lights(self):
         """
@@ -98,6 +106,14 @@ class GUI:
         Decide whether you want to type or not.
         """
         self.typing_tag = val
+
+    def indicate_saying(self):
+        if self.time_recording is None:
+            return self.make_text("recording ...", self.text_color, self.tile_color, (120, self.window_height/4))
+        elif time.time() - self.time_recording >= 1:
+            return self.make_text("say something ...", self.text_color, self.tile_color, (120, self.window_height/4))
+        else:
+            return self.make_text("recording ...", self.text_color, self.tile_color, (120, self.window_height/4))
 
     def draw(self, state):
         """
@@ -274,8 +290,7 @@ class GUI:
         elif state == "SSH season voice mode":
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
-            recording_sur, recording_rect = self.make_text("recording ...", self.text_color, self.tile_color,
-                                                           (100, self.window_height/4))
+            recording_sur, recording_rect = self.indicate_saying()
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
             self.button_mode = Button("Button mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
             self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
@@ -287,7 +302,12 @@ class GUI:
             self.buttons = [self.back, self.button_mode]
             self.display_surface.blit(title_sur, title_rect)
             if self.recording:
+                if self.set_time_recording:
+                    self.time_recording = time.time()
+                    self.set_time_recording = False
                 self.display_surface.blit(recording_sur, recording_rect)
+            else:
+                self.set_time_recording = True
 
             # Lights
             if not self.doneFlashing:
