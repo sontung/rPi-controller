@@ -14,11 +14,13 @@ class Speaker:
 
     def __getstate__(self):
         odict = self.__dict__.copy()
+        self.talk.disconnect()
         del odict["engine"]
         return odict
 
     def __setstate__(self, d):
         self.__dict__.update(d)
+        self.talk.connect()
         self.engine = pyttsx.init()
         self.engine.setProperty('volume', 1.0)
         self.engine.setProperty('voice',
@@ -47,25 +49,24 @@ class Speaker:
             self.introduce()
             return None
         elif text == "green":
-            #self.talk.command("echo switchGreen >/tmp/commandPipe")
-            self.say("green light is %s as you commanded" % self.bool_to_text[str(not self._game_gui.green)])
-            return "green"
+            self.talk.command("echo switchGreen >/tmp/commandPipe")
+            return "green", "green light is %s as you commanded"
         elif text == "red":
-            #self.talk.command("echo switchRed >/tmp/commandPipe")
+            self.talk.command("echo switchRed >/tmp/commandPipe")
             return "red", "red light is %s as you commanded"
         elif text == "yellow":
-            #self.talk.command("echo switchYellow >/tmp/commandPipe")
+            self.talk.command("echo switchYellow >/tmp/commandPipe")
             return "yellow", "yellow light is %s as you commanded"
         elif text.lower() == "flash":
-            #self.ssh_talk.command("echo flash >/tmp/commandPipe")
+            self.talk.command("echo flash >/tmp/commandPipe")
             self.say("the lights are flashing")
             return "flash", "nothing"
         elif text.lower() == "all on":
-            #self.ssh_talk.command("echo turnOn >/tmp/commandPipe")
+            self.talk.command("echo turnOn >/tmp/commandPipe")
             self.say("all the lights are on")
             return "all on", "nothing"
         elif text.lower() == "all off":
-            #self.ssh_talk.command("echo turnOff >/tmp/commandPipe")
+            self.talk.command("echo turnOff >/tmp/commandPipe")
             self.say("all the lights are off")
             return "all off", "nothing"
         else:

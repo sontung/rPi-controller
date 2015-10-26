@@ -6,7 +6,7 @@ import voice_speak
 import voice_recognition
 import time
 from pygame.locals import *
-from collections import deque
+from multiprocessing import Queue
 
 
 class EventLogic:
@@ -23,7 +23,7 @@ class EventLogic:
             K_RIGHT: 6,
             K_LEFT: 4
         }
-        self.queue = deque()  # Information channel for listening process
+        self.queue = Queue()  # Information channel for listening process
         self.last_voice_command = 0.0
 
     def quit(self):
@@ -77,7 +77,6 @@ class EventLogic:
                         self._game_state.set_state("error cannot connect")
                     else:
                         self._game_state.set_state("SSH season")
-                        #self.ssh_talk.command("sudo /home/pi/group12/comm/outputControl.py")
                 elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to socket
                     pass
 
@@ -93,7 +92,7 @@ class EventLogic:
                     self.ssh_talk.command("echo switchRed >/tmp/commandPipe")
                 elif self._game_gui.green_switch.get_rect().collidepoint(event.pos):
                     self._game_gui.command_switch("green")
-                    #self.ssh_talk.command("echo switchGreen >/tmp/commandPipe")
+                    self.ssh_talk.command("echo switchGreen >/tmp/commandPipe")
                 elif self._game_gui.yellow_switch.get_rect().collidepoint(event.pos):
                     self._game_gui.command_switch("yellow")
                     self.ssh_talk.command("echo switchYellow >/tmp/commandPipe")
@@ -168,7 +167,7 @@ class EventLogic:
                 self._game_gui.recording = not self._game_gui.recording
                 if not self._game_gui.recording:
                     self.last_voice_command = time.time()
-                self.queue.append(self._game_gui.recording)
+                self.queue.put(self._game_gui.recording)
 
             else:
                 if self._game_gui.typing_tag:

@@ -2,6 +2,9 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 26th Oct
+Fix the error that's cannot pickle SSH communication module paramiko 
+
 ## 17th Oct
 Improve Pipi
 

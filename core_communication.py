@@ -11,9 +11,9 @@ import select
 
 class SSHCommunication:
     def __init__(self):
-        self.host = ""
-        self.user = ""
-        self.password = ""
+        self.host = "192.168.43.96"
+        self.user = "pi"
+        self.password = "raspberry"
         self.ssh = None
 
     def specify_information(self, host, username, password):
