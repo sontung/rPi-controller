@@ -287,6 +287,125 @@ class GUI:
             self.display_surface.blit(self.voice_mode.get_sr()[0], self.voice_mode.get_sr()[1])
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
+        elif state == "Web season":
+            title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/10))
+            self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.voice_mode = Button("Voice mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
+            self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
+                                         {"on": (105, 0), "normal": (0, 0)}, self, self.red)
+            self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
+                                           {"on": (35, 0), "normal": (0, 0)}, self, self.green)
+            self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
+                                            {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
+            allOn_indication_sur, allOn_indication_rect = self.make_text("All On", self.text_color, self.tile_color,
+                                                                         (self.window_width/8, self.window_height/4+25))
+            allOff_indication_sur, allOff_indication_rect = self.make_text("All Off", self.text_color, self.tile_color,
+                                                                           (self.window_width/8, self.window_height*7/20+25))
+            red_indication_sur, red_indication_rect = self.make_text("Red On/Off", self.text_color, self.tile_color,
+                                                                     (self.window_width/8, self.window_height*9/20+25))
+            green_indication_sur, green_indication_rect = self.make_text("Green On/Off", self.text_color,
+                                                                         self.tile_color,
+                                                                         (self.window_width/8, self.window_height*11/20+25))
+            yellow_indication_sur, yellow_indication_rect = self.make_text("Yellow On/Off", self.text_color,
+                                                                           self.tile_color,
+                                                                           (self.window_width/8, self.window_height*13/20+25))
+            flash_indication_sur, flash_indication_rect = self.make_text("Flash", self.text_color, self.tile_color,
+                                                                         (self.window_width/8, self.window_height*15/20+25))
+            self.allOn_switch = ButtonSprite((self.window_width/4, self.window_height/4), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.allOff_switch = ButtonSprite((self.window_width/4, self.window_height*7/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.red_switch = ButtonSprite((self.window_width/4, self.window_height*9/20), self.button_sprites,
+                                           {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.green_switch = ButtonSprite((self.window_width/4, self.window_height*11/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.yellow_switch = ButtonSprite((self.window_width/4, self.window_height*13/20), self.button_sprites,
+                                              {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.flash_switch = ButtonSprite((self.window_width/4, self.window_height*15/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.buttons = [self.allOn_switch, self.allOff_switch, self.back, self.red_switch, self.green_switch,
+                            self.yellow_switch, self.flash_switch, self.voice_mode]
+            self.display_surface.blit(title_sur, title_rect)
+
+            # Texts
+            self.display_surface.blit(allOn_indication_sur, allOn_indication_rect)
+            self.display_surface.blit(allOff_indication_sur, allOff_indication_rect)
+            self.display_surface.blit(red_indication_sur, red_indication_rect)
+            self.display_surface.blit(green_indication_sur, green_indication_rect)
+            self.display_surface.blit(yellow_indication_sur, yellow_indication_rect)
+            self.display_surface.blit(flash_indication_sur, flash_indication_rect)
+
+            # Switches
+            self.display_surface.blit(self.allOn_switch.get_img(), self.allOn_switch.get_pos())
+            self.display_surface.blit(self.allOff_switch.get_img(), self.allOff_switch.get_pos())
+            self.display_surface.blit(self.red_switch.get_img(), self.red_switch.get_pos())
+            self.display_surface.blit(self.green_switch.get_img(), self.green_switch.get_pos())
+            self.display_surface.blit(self.yellow_switch.get_img(), self.yellow_switch.get_pos())
+            self.display_surface.blit(self.flash_switch.get_img(), self.flash_switch.get_pos())
+
+            # Lights
+            if not self.doneFlashing:
+                if self.dummy_var % 2 == 1:
+                    self.command_switch("all on")
+                    self.blit_lights()
+                if self.dummy_var % 2 == 0:
+                    self.command_switch("all off")
+                    self.blit_lights()
+                if self.dummy_var == 12:
+                    self.dummy_var = 1
+                    self.doneFlashing = True
+                else:
+                    self.dummy_var += 1
+                    if self.dummy_var > 2:
+                        pygame.time.wait(1000)
+
+            self.blit_lights()
+            self.display_surface.blit(self.voice_mode.get_sr()[0], self.voice_mode.get_sr()[1])
+            self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
+        elif state == "Web season voice mode":
+            title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/10))
+            recording_sur, recording_rect = self.indicate_saying()
+            self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.button_mode = Button("Button mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
+            self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
+                                         {"on": (105, 0), "normal": (0, 0)}, self, self.red)
+            self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
+                                           {"on": (35, 0), "normal": (0, 0)}, self, self.green)
+            self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
+                                            {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
+            self.buttons = [self.back, self.button_mode]
+            self.display_surface.blit(title_sur, title_rect)
+            if self.recording:
+                if self.set_time_recording:
+                    self.time_recording = time.time()
+                    self.set_time_recording = False
+                self.display_surface.blit(recording_sur, recording_rect)
+            else:
+                self.set_time_recording = True
+
+            # Lights
+            if not self.doneFlashing:
+                if self.dummy_var % 2 == 1:
+                    self.command_switch("all on")
+                    self.blit_lights()
+                if self.dummy_var % 2 == 0:
+                    self.command_switch("all off")
+                    self.blit_lights()
+                if self.dummy_var == 12:
+                    self.dummy_var = 1
+                    self.doneFlashing = True
+                else:
+                    self.dummy_var += 1
+                    if self.dummy_var > 2:
+                        pygame.time.wait(1000)
+
+            self.blit_lights()
+            self.display_surface.blit(self.button_mode.get_sr()[0], self.button_mode.get_sr()[1])
+            self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
         elif state == "SSH season voice mode":
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))

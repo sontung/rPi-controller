@@ -2,6 +2,11 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 30th Oct
+An attempt on implementing web server communication using ThingSpeak web API. Tests include
+uploading and downloading command between two different processes (button mode and voice mode). 
+Also, an attempt on "light states checking" feature has been made.
+
 ## 26th Oct
 Fix the error that's cannot pickle SSH communication module paramiko 
 

@@ -31,7 +31,7 @@ if __name__ == "__main__":
     while True:
         game_gui.draw(game_state.get_state())
         game_event_handler.event_handler()
-        if game_state.get_state() == "SSH season voice mode":
+        if game_state.get_state() == "SSH season voice mode" or game_state.get_state() == "Web season voice mode":
             if not game_event_handler.queue.empty():
                 val = game_event_handler.queue.get()
                 if val:

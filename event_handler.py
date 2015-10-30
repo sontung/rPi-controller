@@ -13,8 +13,9 @@ class EventLogic:
     def __init__(self, _game_state, _game_gui):
         self._game_state = _game_state
         self._game_gui = _game_gui
+        self.web_talk = core_communication.WebServerCommunication()
         self.ssh_talk = core_communication.SSHCommunication()
-        self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, _game_gui)
+        self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self.web_talk, _game_gui)
         self.pipi_ear = voice_recognition.VoiceRecognition()
         self.current_prompt = None
         self.movement = {
@@ -77,8 +78,10 @@ class EventLogic:
                         self._game_state.set_state("error cannot connect")
                     else:
                         self._game_state.set_state("SSH season")
-                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to socket
-                    pass
+                        self.pipi.update_state("ssh")
+                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to web server
+                    self._game_state.set_state("Web season")
+                    self.pipi.update_state("web")
 
             elif self._game_state.get_state() == "SSH season":
                 if self._game_gui.allOff_switch.get_rect().collidepoint(event.pos):
@@ -112,6 +115,38 @@ class EventLogic:
                     self._game_state.set_state("SSH season")
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):
                     self.ssh_talk.disconnect()
+                    self._game_state.set_state("welcome")
+
+            elif self._game_state.get_state() == "Web season":
+                if self._game_gui.allOff_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("all off")
+                    self.web_talk.command("put", "all off")
+                elif self._game_gui.allOn_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("all on")
+                    self.web_talk.command("put", "all on")
+                elif self._game_gui.red_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("red")
+                    self.web_talk.command("put", "red")
+                elif self._game_gui.green_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("green")
+                    self.web_talk.command("put", "green")
+                elif self._game_gui.yellow_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("yellow")
+                    self.web_talk.command("put", "yellow")
+                elif self._game_gui.flash_switch.get_rect().collidepoint(event.pos):
+                    self._game_gui.command_switch("flash")
+                    self.web_talk.command("put", "flash")
+                elif self._game_gui.voice_mode.get_rect().collidepoint(event.pos):
+                    self._game_state.set_state("Web season voice mode")
+                    self.last_voice_command = time.time()
+                    self.pipi.introduce()
+                elif self._game_gui.back.get_rect().collidepoint(event.pos):
+                    self._game_state.set_state("welcome")
+
+            elif self._game_state.get_state() == "Web season voice mode":
+                if self._game_gui.button_mode.get_rect().collidepoint(event.pos):
+                    self._game_state.set_state("Web season")
+                elif self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
 
             elif self._game_state.get_state() == "setting":
