@@ -2,6 +2,25 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 4th Nov
+"Light states checking" feature is completed and tested with both SSH and web communication.
+But drawing and checking at the same time is lagging for the program. Things can be worse in 
+web mode. 
+
+## 30th Oct
+An attempt on implementing web server communication using ThingSpeak web API. Tests include
+uploading and downloading command between two different processes (button mode and voice mode). 
+Also, an attempt on "light states checking" feature has been made.
+
+## 26th Oct
+Fix the error that's cannot pickle SSH communication module paramiko 
+
+## 17th Oct
+Improve Pipi
+
+## 16th Oct
+Basically have Pipi working with the app
+
 ## 9th Oct
 Basically set up Pipi - voice assistant. Test includes Pipi introduces herself
 

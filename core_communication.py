@@ -7,13 +7,14 @@ import paramiko
 import sys
 import time
 import select
+import requests
 
 
 class SSHCommunication:
     def __init__(self):
-        self.host = ""
-        self.user = ""
-        self.password = ""
+        self.host = "192.168.43.96"
+        self.user = "pi"
+        self.password = "raspberry"
         self.ssh = None
 
     def specify_information(self, host, username, password):
@@ -78,3 +79,40 @@ class SSHCommunication:
                 if len(rl) > 0:
                     # Print data from stdout
                     print stdout.channel.recv(1024),
+            return stdout
+
+
+class WebServerCommunication:
+    """
+    Web server communication using ThingSpeak API
+    """
+    def __init__(self, talkbackID=3849, api_key="1E6T0Q0SFT11ONQN"):
+        self.talkbackID = talkbackID
+        self.api_key = api_key
+        self.list_of_commands = {
+            "put": ["post", "https://api.thingspeak.com/talkbacks/%d/commands" % self.talkbackID,
+                    {"api_key": self.api_key, "command_string": ""}],
+            "get": ["post", "https://api.thingspeak.com/talkbacks/%d/commands/execute" % self.talkbackID,
+                    {"api_key": self.api_key}],
+            "list_all": ["get", "https://api.thingspeak.com/talkbacks/%d/commands?api_key=%s" %
+                         (self.talkbackID, self.api_key)],
+            "delete_all": ["delete", "https://api.thingspeak.com/talkbacks/%d/commands" % self.talkbackID,
+                           {"api_key": self.api_key}]
+        }
+
+    def command(self, command, optional=""):
+        data = self.list_of_commands[command]
+        if data[0] == "post":
+            if command == "get":
+                r = requests.post(data[1], data[2])
+                return r.content
+            elif command == "put":
+                data[2]["command_string"] = optional
+                r = requests.post(data[1], data[2])
+                return r.content
+        elif data[0] == "get":
+            r = requests.get(data[1])
+            return r.content
+        elif data[0] == "delete":
+            r = requests.delete(data[1], params=data[2])
+            return r.content
