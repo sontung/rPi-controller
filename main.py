@@ -24,6 +24,7 @@ if __name__ == "__main__":
     #game_state.set_state("SSH season voice mode")
     game_gui = gui.GUI(game_state)
     game_event_handler = event_handler.EventLogic(game_state, game_gui)
+    game_gui.add_handler(game_event_handler)
     game_gui.draw(game_state.get_state())
     pygame.display.update()
     commandQueue = Manager().Queue()
@@ -42,10 +43,9 @@ if __name__ == "__main__":
                     listeningProcess = Process(target=voice_listener, args=(game_event_handler, commandQueue,))
             if not commandQueue.empty():
                 voice_command = commandQueue.get()
-                game_gui.command_switch(voice_command[0])
                 try:
-                    game_event_handler.pipi.say(voice_command[1] %
-                                                game_gui.bool_to_text[str(game_gui.light_to_string[voice_command[0]])])
+                    game_event_handler.pipi.say(voice_command %
+                                                game_gui.bool_to_text[str(game_gui.light_to_string[voice_command])])
                 except KeyError:
                     pass
         pygame.display.update()

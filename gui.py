@@ -1,12 +1,12 @@
 import pygame
 import sys
 import time
-import threading
 
 
 class GUI:
     def __init__(self, _game_state):
         pygame.init()
+        self.handler = None
         self.state = _game_state
         self.font_size = 40
         self.window_height = 800
@@ -52,10 +52,26 @@ class GUI:
         self.user_prompt = Prompt((self.window_width/4, self.window_height/3+100), self, "username")
         self.password_prompt = Prompt((self.window_width/4, self.window_height/3+200), self, "password")
 
+    def add_handler(self, handler):
+        self.handler = handler
+
     def reset_prompts(self):
         self.host_prompt.reset()
         self.user_prompt.reset()
         self.password_prompt.reset()
+
+    def update_states_light(self):
+        if self.state.get_state().find("SSH") >= 0:
+            result = self.handler.ssh_talk.command("cd group12; sudo python state_checker.py lights").readlines()
+            self.red = bool(int(result[0][0]))
+            self.yellow = bool(int(result[0][1]))
+            self.green = bool(int(result[0][2]))
+        elif self.state.get_state().find("Web") >= 0:
+            result = self.handler.web_talk_light_states.command("get")
+            if result:
+                self.red = bool(int(result[0]))
+                self.yellow = bool(int(result[1]))
+                self.green = bool(int(result[2]))
 
     def command_switch(self, light):
         """
@@ -211,6 +227,7 @@ class GUI:
             self.display_surface.blit(self.password_prompt.output_title()[0], self.password_prompt.output_title()[1])
 
         elif state == "SSH season":
+            self.update_states_light()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
@@ -266,28 +283,12 @@ class GUI:
             self.display_surface.blit(self.green_switch.get_img(), self.green_switch.get_pos())
             self.display_surface.blit(self.yellow_switch.get_img(), self.yellow_switch.get_pos())
             self.display_surface.blit(self.flash_switch.get_img(), self.flash_switch.get_pos())
-
-            # Lights
-            if not self.doneFlashing:
-                if self.dummy_var % 2 == 1:
-                    self.command_switch("all on")
-                    self.blit_lights()
-                if self.dummy_var % 2 == 0:
-                    self.command_switch("all off")
-                    self.blit_lights()
-                if self.dummy_var == 12:
-                    self.dummy_var = 1
-                    self.doneFlashing = True
-                else:
-                    self.dummy_var += 1
-                    if self.dummy_var > 2:
-                        pygame.time.wait(1000)
-
             self.blit_lights()
             self.display_surface.blit(self.voice_mode.get_sr()[0], self.voice_mode.get_sr()[1])
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state == "Web season":
+            self.update_states_light()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
@@ -343,28 +344,12 @@ class GUI:
             self.display_surface.blit(self.green_switch.get_img(), self.green_switch.get_pos())
             self.display_surface.blit(self.yellow_switch.get_img(), self.yellow_switch.get_pos())
             self.display_surface.blit(self.flash_switch.get_img(), self.flash_switch.get_pos())
-
-            # Lights
-            if not self.doneFlashing:
-                if self.dummy_var % 2 == 1:
-                    self.command_switch("all on")
-                    self.blit_lights()
-                if self.dummy_var % 2 == 0:
-                    self.command_switch("all off")
-                    self.blit_lights()
-                if self.dummy_var == 12:
-                    self.dummy_var = 1
-                    self.doneFlashing = True
-                else:
-                    self.dummy_var += 1
-                    if self.dummy_var > 2:
-                        pygame.time.wait(1000)
-
             self.blit_lights()
             self.display_surface.blit(self.voice_mode.get_sr()[0], self.voice_mode.get_sr()[1])
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state == "Web season voice mode":
+            self.update_states_light()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             recording_sur, recording_rect = self.indicate_saying()
@@ -385,28 +370,12 @@ class GUI:
                 self.display_surface.blit(recording_sur, recording_rect)
             else:
                 self.set_time_recording = True
-
-            # Lights
-            if not self.doneFlashing:
-                if self.dummy_var % 2 == 1:
-                    self.command_switch("all on")
-                    self.blit_lights()
-                if self.dummy_var % 2 == 0:
-                    self.command_switch("all off")
-                    self.blit_lights()
-                if self.dummy_var == 12:
-                    self.dummy_var = 1
-                    self.doneFlashing = True
-                else:
-                    self.dummy_var += 1
-                    if self.dummy_var > 2:
-                        pygame.time.wait(1000)
-
             self.blit_lights()
             self.display_surface.blit(self.button_mode.get_sr()[0], self.button_mode.get_sr()[1])
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state == "SSH season voice mode":
+            self.update_states_light()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             recording_sur, recording_rect = self.indicate_saying()
@@ -427,23 +396,6 @@ class GUI:
                 self.display_surface.blit(recording_sur, recording_rect)
             else:
                 self.set_time_recording = True
-
-            # Lights
-            if not self.doneFlashing:
-                if self.dummy_var % 2 == 1:
-                    self.command_switch("all on")
-                    self.blit_lights()
-                if self.dummy_var % 2 == 0:
-                    self.command_switch("all off")
-                    self.blit_lights()
-                if self.dummy_var == 12:
-                    self.dummy_var = 1
-                    self.doneFlashing = True
-                else:
-                    self.dummy_var += 1
-                    if self.dummy_var > 2:
-                        pygame.time.wait(1000)
-
             self.blit_lights()
             self.display_surface.blit(self.button_mode.get_sr()[0], self.button_mode.get_sr()[1])
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])

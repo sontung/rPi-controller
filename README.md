@@ -2,6 +2,11 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 4th Nov
+"Light states checking" feature is completed and tested with both SSH and web communication.
+But drawing and checking at the same time is lagging for the program. Things can be worse in 
+web mode. 
+
 ## 30th Oct
 An attempt on implementing web server communication using ThingSpeak web API. Tests include
 uploading and downloading command between two different processes (button mode and voice mode). 

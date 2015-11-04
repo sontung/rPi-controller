@@ -60,39 +60,39 @@ class Speaker:
                 self.ssh_talk.command("echo switchGreen >/tmp/commandPipe")
             elif self.state == "web":
                 self.web_talk.command("put", "green")
-            return "green", "green light is %s as you commanded"
+            return "green light is %s as you commanded"
         elif text == "red":
             if self.state == "ssh":
                 self.ssh_talk.command("echo switchRed >/tmp/commandPipe")
             elif self.state == "web":
                 self.web_talk.command("put", "red")
-            return "red", "red light is %s as you commanded"
+            return "red light is %s as you commanded"
         elif text == "yellow":
             if self.state == "ssh":
                 self.ssh_talk.command("echo switchYellow >/tmp/commandPipe")
             elif self.state == "web":
                 self.web_talk.command("put", "yellow")
-            return "yellow", "yellow light is %s as you commanded"
+            return "yellow light is %s as you commanded"
         elif text.lower() == "flash":
             if self.state == "ssh":
                 self.ssh_talk.command("echo flash >/tmp/commandPipe")
             elif self.state == "web":
                 self.web_talk.command("put", "flash")
             self.say("the lights are flashing")
-            return "flash", "nothing"
+            return "nothing"
         elif text.lower() == "all on":
             if self.state == "ssh":
                 self.ssh_talk.command("echo turnOn >/tmp/commandPipe")
             elif self.state == "web":
                 self.web_talk.command("put", "all on")
             self.say("all the lights are on")
-            return "all on", "nothing"
+            return "nothing"
         elif text.lower() == "all off":
             if self.state == "ssh":
                 self.ssh_talk.command("echo turnOff >/tmp/commandPipe")
             elif self.state == "web":
                 self.web_talk.command("put", "all off")
             self.say("all the lights are off")
-            return "all off", "nothing"
+            return "nothing"
         else:
             pass

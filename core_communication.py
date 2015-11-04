@@ -12,7 +12,7 @@ import requests
 
 class SSHCommunication:
     def __init__(self):
-        self.host = "192.168.1.108"
+        self.host = "192.168.43.96"
         self.user = "pi"
         self.password = "raspberry"
         self.ssh = None
@@ -86,9 +86,9 @@ class WebServerCommunication:
     """
     Web server communication using ThingSpeak API
     """
-    def __init__(self):
-        self.talkbackID = 3849
-        self.api_key = "1E6T0Q0SFT11ONQN"
+    def __init__(self, talkbackID=3849, api_key="1E6T0Q0SFT11ONQN"):
+        self.talkbackID = talkbackID
+        self.api_key = api_key
         self.list_of_commands = {
             "put": ["post", "https://api.thingspeak.com/talkbacks/%d/commands" % self.talkbackID,
                     {"api_key": self.api_key, "command_string": ""}],

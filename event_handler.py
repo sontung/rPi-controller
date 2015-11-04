@@ -14,6 +14,7 @@ class EventLogic:
         self._game_state = _game_state
         self._game_gui = _game_gui
         self.web_talk = core_communication.WebServerCommunication()
+        self.web_talk_light_states = core_communication.WebServerCommunication(3875, "7IW3BGP1IT0FOGYQ")
         self.ssh_talk = core_communication.SSHCommunication()
         self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self.web_talk, _game_gui)
         self.pipi_ear = voice_recognition.VoiceRecognition()
@@ -85,22 +86,16 @@ class EventLogic:
 
             elif self._game_state.get_state() == "SSH season":
                 if self._game_gui.allOff_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("all off")
                     self.ssh_talk.command("echo turnOff >/tmp/commandPipe")
                 elif self._game_gui.allOn_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("all on")
                     self.ssh_talk.command("echo turnOn >/tmp/commandPipe")
                 elif self._game_gui.red_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("red")
                     self.ssh_talk.command("echo switchRed >/tmp/commandPipe")
                 elif self._game_gui.green_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("green")
                     self.ssh_talk.command("echo switchGreen >/tmp/commandPipe")
                 elif self._game_gui.yellow_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("yellow")
                     self.ssh_talk.command("echo switchYellow >/tmp/commandPipe")
                 elif self._game_gui.flash_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("flash")
                     self.ssh_talk.command("echo flash >/tmp/commandPipe")
                 elif self._game_gui.voice_mode.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("SSH season voice mode")
