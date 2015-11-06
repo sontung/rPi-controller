@@ -1,36 +1,26 @@
-import multiprocessing
-import time
+from multiprocessing import Queue, Process
 
 
-def handler(queue):
-    val = False
-    x = time.time()
-    while True:
-        if time.time() - x == 5:
-            print "handling"
-            val = not val
-            queue.put([val])
-            x = time.time()
+def process(x, queue):
+    queue.put(x**2)
 
 
-def listener():
-    x = 0
-    while True:
-        x += 1
+class Handler:
+    def __init__(self):
+        self.x = 0
+
+    def run(self, queue):
+        self.x += 1
+        if self.x % 4 == 0:
+            incrementer = Process(target=process, args=(self.x, queue))
+            incrementer.start()
+            print queue.get()
+            incrementer.terminate()
+            incrementer.join()
 
 
 if __name__ == "__main__":
-    q = multiprocessing.Queue()
-    h = multiprocessing.Process(target=handler, args=(q,))
-    l = multiprocessing.Process(target=listener)
-    h.start()
+    handler = Handler()
+    queue1 = Queue()
     while True:
-        val1 = q.get()
-        if val1:
-            print "start listening"
-            l.start()
-        else:
-            print "terminate"
-            l.terminate()
-            l.join()
-            l = multiprocessing.Process(target=listener)
+        handler.run(queue1)

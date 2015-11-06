@@ -35,10 +35,6 @@ class GUI:
         self.time_recording = None  # the moment the user records
         self.set_time_recording = True
 
-        # serve for flashing lights
-        self.dummy_var = 1
-        self.doneFlashing = True
-
         # states of the lights
         self.red = False
         self.green = False
@@ -60,42 +56,11 @@ class GUI:
         self.user_prompt.reset()
         self.password_prompt.reset()
 
-    def update_states_light(self):
-        if self.state.get_state().find("SSH") >= 0:
-            result = self.handler.ssh_talk.command("cd group12; sudo python state_checker.py lights").readlines()
-            self.red = bool(int(result[0][0]))
-            self.yellow = bool(int(result[0][1]))
-            self.green = bool(int(result[0][2]))
-        elif self.state.get_state().find("Web") >= 0:
-            result = self.handler.web_talk_light_states.command("get")
-            if result:
-                self.red = bool(int(result[0]))
-                self.yellow = bool(int(result[1]))
-                self.green = bool(int(result[2]))
-
-    def command_switch(self, light):
-        """
-        Change the states of lights
-        :param light:
-        :return:
-        """
-        if light == "all off":
-            self.red = False
-            self.green = False
-            self.yellow = False
-        elif light == "all on":
-            self.red = True
-            self.green = True
-            self.yellow = True
-        elif light == "red":
-            self.red = not self.red
-        elif light == "green":
-            self.green = not self.green
-        elif light == "yellow":
-            self.yellow = not self.yellow
-        elif light == "flash":
-            self.doneFlashing = False
-        self.light_to_string = dict(red=self.red, green=self.green, yellow=self.yellow)
+    def update_states_lights(self):
+        result = self.handler.get_states_lights()
+        self.red = bool(int(result[0][0]))
+        self.yellow = bool(int(result[0][1]))
+        self.green = bool(int(result[0][2]))
 
     def blit_lights(self):
         """
@@ -227,7 +192,7 @@ class GUI:
             self.display_surface.blit(self.password_prompt.output_title()[0], self.password_prompt.output_title()[1])
 
         elif state == "SSH season":
-            self.update_states_light()
+            self.update_states_lights()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
@@ -288,7 +253,7 @@ class GUI:
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state == "Web season":
-            self.update_states_light()
+            self.update_states_lights()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
@@ -349,7 +314,7 @@ class GUI:
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state == "Web season voice mode":
-            self.update_states_light()
+            self.update_states_lights()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             recording_sur, recording_rect = self.indicate_saying()
@@ -375,7 +340,7 @@ class GUI:
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state == "SSH season voice mode":
-            self.update_states_light()
+            self.update_states_lights()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             recording_sur, recording_rect = self.indicate_saying()

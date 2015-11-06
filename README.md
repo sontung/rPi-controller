@@ -2,6 +2,9 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 6th Nov
+Solve lagging problem when using "light states checking" feature.
+
 ## 4th Nov
 "Light states checking" feature is completed and tested with both SSH and web communication.
 But drawing and checking at the same time is lagging for the program. Things can be worse in 

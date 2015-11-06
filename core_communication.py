@@ -2,6 +2,7 @@
 This is the code for communicating with the rPi through SSH. It uses paramiko
 as a main way to setup a SSH connection between this app and the rPi.
 To connect successfully, one must find rPi's IP address.
+Also for web server, the code uses ThingSpeak API web service.
 """
 import paramiko
 import sys
@@ -12,10 +13,19 @@ import requests
 
 class SSHCommunication:
     def __init__(self):
-        self.host = "192.168.43.96"
+        self.host = "192.168.1.108"
         self.user = "pi"
         self.password = "raspberry"
         self.ssh = None
+
+    def __getstate__(self):
+        odict = self.__dict__.copy()
+        self.disconnect()
+        return odict
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+        self.connect()
 
     def specify_information(self, host, username, password):
         """

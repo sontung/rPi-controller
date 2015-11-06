@@ -6,7 +6,18 @@ import voice_speak
 import voice_recognition
 import time
 from pygame.locals import *
-from multiprocessing import Queue
+from multiprocessing import Queue, Process
+
+
+def update_process(talk, state, queue):
+    if state.find("SSH") >= 0:
+        result = talk.command("cd light_control; sudo python state_checker.py lights").readlines()
+        queue.put(result)
+    elif state.find("Web") >= 0:
+        result = talk.command("get")
+        while not result:
+            result = talk.command("get")
+        queue.put([result])
 
 
 class EventLogic:
@@ -19,14 +30,29 @@ class EventLogic:
         self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self.web_talk, _game_gui)
         self.pipi_ear = voice_recognition.VoiceRecognition()
         self.current_prompt = None
-        self.movement = {
-            K_UP: 8,
-            K_DOWN: 2,
-            K_RIGHT: 6,
-            K_LEFT: 4
-        }
         self.queue = Queue()  # Information channel for listening process
         self.last_voice_command = 0.0
+        self.states_of_lights = ["000"]
+        self.queue_states_of_lights = Queue()
+        self.updater = None
+
+    def get_states_lights(self):
+        return self.states_of_lights
+
+    def update_states_lights(self):
+        if self._game_state.get_state().find("SSH") >= 0:
+            self.updater = Process(target=update_process, args=(self.ssh_talk, "SSH", self.queue_states_of_lights))
+            self.updater.start()
+        elif self._game_state.get_state().find("Web") >= 0:
+            self.updater = Process(target=update_process, args=(self.web_talk_light_states, "Web",
+                                                                self.queue_states_of_lights))
+            self.updater.start()
+
+    def set_states_lights(self):
+        if not self.queue_states_of_lights.empty():
+            self.states_of_lights = self.queue_states_of_lights.get()
+            self.updater.terminate()
+            self.updater.join()
 
     def quit(self):
         pygame.quit()
@@ -49,6 +75,7 @@ class EventLogic:
 
     def event_handler(self):
         self.check_last_voice_command()
+        self.set_states_lights()
         event = pygame.event.poll()
         if event.type == MOUSEBUTTONDOWN:
             if self._game_gui.buttons:
@@ -85,6 +112,8 @@ class EventLogic:
                     self.pipi.update_state("web")
 
             elif self._game_state.get_state() == "SSH season":
+                self.update_states_lights()
+                self.ssh_talk.connect()
                 if self._game_gui.allOff_switch.get_rect().collidepoint(event.pos):
                     self.ssh_talk.command("echo turnOff >/tmp/commandPipe")
                 elif self._game_gui.allOn_switch.get_rect().collidepoint(event.pos):
@@ -106,6 +135,8 @@ class EventLogic:
                     self._game_state.set_state("welcome")
 
             elif self._game_state.get_state() == "SSH season voice mode":
+                self.update_states_lights()
+                self.ssh_talk.connect()
                 if self._game_gui.button_mode.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("SSH season")
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):
@@ -113,23 +144,18 @@ class EventLogic:
                     self._game_state.set_state("welcome")
 
             elif self._game_state.get_state() == "Web season":
+                self.update_states_lights()
                 if self._game_gui.allOff_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("all off")
                     self.web_talk.command("put", "all off")
                 elif self._game_gui.allOn_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("all on")
                     self.web_talk.command("put", "all on")
                 elif self._game_gui.red_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("red")
                     self.web_talk.command("put", "red")
                 elif self._game_gui.green_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("green")
                     self.web_talk.command("put", "green")
                 elif self._game_gui.yellow_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("yellow")
                     self.web_talk.command("put", "yellow")
                 elif self._game_gui.flash_switch.get_rect().collidepoint(event.pos):
-                    self._game_gui.command_switch("flash")
                     self.web_talk.command("put", "flash")
                 elif self._game_gui.voice_mode.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("Web season voice mode")
@@ -139,6 +165,7 @@ class EventLogic:
                     self._game_state.set_state("welcome")
 
             elif self._game_state.get_state() == "Web season voice mode":
+                self.update_states_lights()
                 if self._game_gui.button_mode.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("Web season")
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):

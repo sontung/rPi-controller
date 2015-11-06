@@ -3,7 +3,7 @@ import sys
 
 
 if __name__ == "__main__":
-    thingspeak = core_communication.WebServerCommunication()
+    thingspeak = core_communication.WebServerCommunication(3875, "7IW3BGP1IT0FOGYQ")
     while True:
         _string = sys.stdin.readline()[:-1]
         try:
