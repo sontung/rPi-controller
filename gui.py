@@ -1,10 +1,12 @@
 import pygame
 import sys
+import time
 
 
 class GUI:
     def __init__(self, _game_state):
         pygame.init()
+        self.handler = None
         self.state = _game_state
         self.font_size = 40
         self.window_height = 800
@@ -28,9 +30,10 @@ class GUI:
         pygame.display.set_caption("Light Controlling Interface")
         self.button_sprites = pygame.image.load("assets\\images\\buttons.png")
         self.light_sprites = pygame.image.load("assets\\images\\leds.png")
-        self.font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
-        self.font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
         self.typing_tag = False
+        self.recording = False
+        self.time_recording = None  # the moment the user records
+        self.set_time_recording = True
 
         # serve for flashing lights
         self.dummy_var = 1
@@ -41,17 +44,41 @@ class GUI:
         self.green = False
         self.yellow = False
 
+        self.light_to_string = dict(red=self.red, green=self.green, yellow=self.yellow)
+        self.bool_to_text = dict(True="on", False="off")
+
         # for setting up information for communication
         self.host_prompt = Prompt((self.window_width/4, self.window_height/3), self, "host")
         self.user_prompt = Prompt((self.window_width/4, self.window_height/3+100), self, "username")
         self.password_prompt = Prompt((self.window_width/4, self.window_height/3+200), self, "password")
+
+    def add_handler(self, handler):
+        self.handler = handler
 
     def reset_prompts(self):
         self.host_prompt.reset()
         self.user_prompt.reset()
         self.password_prompt.reset()
 
+    def update_states_light(self):
+        if self.state.get_state().find("SSH") >= 0:
+            result = self.handler.ssh_talk.command("cd group12; sudo python state_checker.py lights").readlines()
+            self.red = bool(int(result[0][0]))
+            self.yellow = bool(int(result[0][1]))
+            self.green = bool(int(result[0][2]))
+        elif self.state.get_state().find("Web") >= 0:
+            result = self.handler.web_talk_light_states.command("get")
+            if result:
+                self.red = bool(int(result[0]))
+                self.yellow = bool(int(result[1]))
+                self.green = bool(int(result[2]))
+
     def command_switch(self, light):
+        """
+        Change the states of lights
+        :param light:
+        :return:
+        """
         if light == "all off":
             self.red = False
             self.green = False
@@ -68,8 +95,14 @@ class GUI:
             self.yellow = not self.yellow
         elif light == "flash":
             self.doneFlashing = False
+        self.light_to_string = dict(red=self.red, green=self.green, yellow=self.yellow)
 
     def blit_lights(self):
+        """
+        Make changes to the GUI according to the states
+        of the lights
+        :return:
+        """
         self.display_surface.blit(self.red_light.get_img(), self.red_light.get_pos())
         self.display_surface.blit(self.green_light.get_img(), self.green_light.get_pos())
         self.display_surface.blit(self.yellow_light.get_img(), self.yellow_light.get_pos())
@@ -78,7 +111,8 @@ class GUI:
         """
         Make a text object for drawing
         """
-        text_surf = self.font.render(text, True, color, bg_color)
+        font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
+        text_surf = font.render(text, True, color, bg_color)
         text_rect = text_surf.get_rect()
         text_rect.center = center
         return text_surf, text_rect
@@ -89,13 +123,13 @@ class GUI:
         """
         self.typing_tag = val
 
-    def modify_pos_pad(self, command):
-        """
-        Modify the position of the pad according to movement.
-        :return:
-        """
-        self.pos_pad_indication = self.pos_pad_modify_indication[command]
-        self.pos_pad = self.pos_pad_modify_command[command]
+    def indicate_saying(self):
+        if self.time_recording is None:
+            return self.make_text("recording ...", self.text_color, self.tile_color, (120, self.window_height/4))
+        elif time.time() - self.time_recording >= 1:
+            return self.make_text("say something ...", self.text_color, self.tile_color, (120, self.window_height/4))
+        else:
+            return self.make_text("recording ...", self.text_color, self.tile_color, (120, self.window_height/4))
 
     def draw(self, state):
         """
@@ -193,9 +227,11 @@ class GUI:
             self.display_surface.blit(self.password_prompt.output_title()[0], self.password_prompt.output_title()[1])
 
         elif state == "SSH season":
+            self.update_states_light()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/10))
             self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.voice_mode = Button("Voice mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
             self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
                                          {"on": (105, 0), "normal": (0, 0)}, self, self.red)
             self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
@@ -229,7 +265,7 @@ class GUI:
             self.flash_switch = ButtonSprite((self.window_width/4, self.window_height*15/20), self.button_sprites,
                                              {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
             self.buttons = [self.allOn_switch, self.allOff_switch, self.back, self.red_switch, self.green_switch,
-                            self.yellow_switch, self.flash_switch]
+                            self.yellow_switch, self.flash_switch, self.voice_mode]
             self.display_surface.blit(title_sur, title_rect)
 
             # Texts
@@ -247,24 +283,121 @@ class GUI:
             self.display_surface.blit(self.green_switch.get_img(), self.green_switch.get_pos())
             self.display_surface.blit(self.yellow_switch.get_img(), self.yellow_switch.get_pos())
             self.display_surface.blit(self.flash_switch.get_img(), self.flash_switch.get_pos())
-
-            # Lights
-            if not self.doneFlashing:
-                if self.dummy_var % 2 == 1:
-                    self.command_switch("all on")
-                    self.blit_lights()
-                if self.dummy_var % 2 == 0:
-                    self.command_switch("all off")
-                    self.blit_lights()
-                if self.dummy_var == 12:
-                    self.dummy_var = 1
-                    self.doneFlashing = True
-                else:
-                    self.dummy_var += 1
-                    if self.dummy_var > 2:
-                        pygame.time.wait(1000)
-
             self.blit_lights()
+            self.display_surface.blit(self.voice_mode.get_sr()[0], self.voice_mode.get_sr()[1])
+            self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
+        elif state == "Web season":
+            self.update_states_light()
+            title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/10))
+            self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.voice_mode = Button("Voice mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
+            self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
+                                         {"on": (105, 0), "normal": (0, 0)}, self, self.red)
+            self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
+                                           {"on": (35, 0), "normal": (0, 0)}, self, self.green)
+            self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
+                                            {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
+            allOn_indication_sur, allOn_indication_rect = self.make_text("All On", self.text_color, self.tile_color,
+                                                                         (self.window_width/8, self.window_height/4+25))
+            allOff_indication_sur, allOff_indication_rect = self.make_text("All Off", self.text_color, self.tile_color,
+                                                                           (self.window_width/8, self.window_height*7/20+25))
+            red_indication_sur, red_indication_rect = self.make_text("Red On/Off", self.text_color, self.tile_color,
+                                                                     (self.window_width/8, self.window_height*9/20+25))
+            green_indication_sur, green_indication_rect = self.make_text("Green On/Off", self.text_color,
+                                                                         self.tile_color,
+                                                                         (self.window_width/8, self.window_height*11/20+25))
+            yellow_indication_sur, yellow_indication_rect = self.make_text("Yellow On/Off", self.text_color,
+                                                                           self.tile_color,
+                                                                           (self.window_width/8, self.window_height*13/20+25))
+            flash_indication_sur, flash_indication_rect = self.make_text("Flash", self.text_color, self.tile_color,
+                                                                         (self.window_width/8, self.window_height*15/20+25))
+            self.allOn_switch = ButtonSprite((self.window_width/4, self.window_height/4), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.allOff_switch = ButtonSprite((self.window_width/4, self.window_height*7/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.red_switch = ButtonSprite((self.window_width/4, self.window_height*9/20), self.button_sprites,
+                                           {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.green_switch = ButtonSprite((self.window_width/4, self.window_height*11/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.yellow_switch = ButtonSprite((self.window_width/4, self.window_height*13/20), self.button_sprites,
+                                              {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.flash_switch = ButtonSprite((self.window_width/4, self.window_height*15/20), self.button_sprites,
+                                             {"normal": (0, 0), "hover": (50, 0), "pressed": (100, 0)}, self)
+            self.buttons = [self.allOn_switch, self.allOff_switch, self.back, self.red_switch, self.green_switch,
+                            self.yellow_switch, self.flash_switch, self.voice_mode]
+            self.display_surface.blit(title_sur, title_rect)
+
+            # Texts
+            self.display_surface.blit(allOn_indication_sur, allOn_indication_rect)
+            self.display_surface.blit(allOff_indication_sur, allOff_indication_rect)
+            self.display_surface.blit(red_indication_sur, red_indication_rect)
+            self.display_surface.blit(green_indication_sur, green_indication_rect)
+            self.display_surface.blit(yellow_indication_sur, yellow_indication_rect)
+            self.display_surface.blit(flash_indication_sur, flash_indication_rect)
+
+            # Switches
+            self.display_surface.blit(self.allOn_switch.get_img(), self.allOn_switch.get_pos())
+            self.display_surface.blit(self.allOff_switch.get_img(), self.allOff_switch.get_pos())
+            self.display_surface.blit(self.red_switch.get_img(), self.red_switch.get_pos())
+            self.display_surface.blit(self.green_switch.get_img(), self.green_switch.get_pos())
+            self.display_surface.blit(self.yellow_switch.get_img(), self.yellow_switch.get_pos())
+            self.display_surface.blit(self.flash_switch.get_img(), self.flash_switch.get_pos())
+            self.blit_lights()
+            self.display_surface.blit(self.voice_mode.get_sr()[0], self.voice_mode.get_sr()[1])
+            self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
+        elif state == "Web season voice mode":
+            self.update_states_light()
+            title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/10))
+            recording_sur, recording_rect = self.indicate_saying()
+            self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.button_mode = Button("Button mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
+            self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
+                                         {"on": (105, 0), "normal": (0, 0)}, self, self.red)
+            self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
+                                           {"on": (35, 0), "normal": (0, 0)}, self, self.green)
+            self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
+                                            {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
+            self.buttons = [self.back, self.button_mode]
+            self.display_surface.blit(title_sur, title_rect)
+            if self.recording:
+                if self.set_time_recording:
+                    self.time_recording = time.time()
+                    self.set_time_recording = False
+                self.display_surface.blit(recording_sur, recording_rect)
+            else:
+                self.set_time_recording = True
+            self.blit_lights()
+            self.display_surface.blit(self.button_mode.get_sr()[0], self.button_mode.get_sr()[1])
+            self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
+
+        elif state == "SSH season voice mode":
+            self.update_states_light()
+            title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tile_color,
+                                                   (self.window_width/2, self.window_height/10))
+            recording_sur, recording_rect = self.indicate_saying()
+            self.back = Button("Back", self.text_color, self.tile_color, (self.window_width-60, self.window_height/8), self)
+            self.button_mode = Button("Button mode", self.colors["yellow"], self.tile_color, (100, self.window_height/8), self)
+            self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
+                                         {"on": (105, 0), "normal": (0, 0)}, self, self.red)
+            self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
+                                           {"on": (35, 0), "normal": (0, 0)}, self, self.green)
+            self.yellow_light = LightSprite((self.window_width*7/8, self.window_height/4), self.light_sprites,
+                                            {"on": (70, 0), "normal": (0, 0)}, self, self.yellow)
+            self.buttons = [self.back, self.button_mode]
+            self.display_surface.blit(title_sur, title_rect)
+            if self.recording:
+                if self.set_time_recording:
+                    self.time_recording = time.time()
+                    self.set_time_recording = False
+                self.display_surface.blit(recording_sur, recording_rect)
+            else:
+                self.set_time_recording = True
+            self.blit_lights()
+            self.display_surface.blit(self.button_mode.get_sr()[0], self.button_mode.get_sr()[1])
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state.find("error") != -1:
@@ -290,6 +423,9 @@ class GUI:
 
 
 class Sprite:
+    """
+    Class for handling sprites
+    """
     def __init__(self, pos, sheet, loc_in_sheet, _game_gui, dim=None):
         self.sheet = sheet
         self.loc_in_sheet = loc_in_sheet  # a dictionary keeping track of each movement and their sprites
@@ -310,6 +446,9 @@ class Sprite:
 
 
 class ButtonSprite(Sprite):
+    """
+    Child class for handling button sprites specifically
+    """
     def __init__(self, pos, sheet, loc_in_sheet, _game_gui):
         Sprite.__init__(self, pos, sheet, loc_in_sheet, _game_gui)
         self.rect = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
@@ -322,6 +461,9 @@ class ButtonSprite(Sprite):
         return self.rect
 
     def set_pressed(self, pos):
+        """
+        Highlight the button when the user clicks mouse on
+        """
         if self.rect.collidepoint(pos):
             self.gui.display_surface.blit(self.img_pressed, self.pos)
 
@@ -334,6 +476,9 @@ class ButtonSprite(Sprite):
 
 
 class LightSprite(Sprite):
+    """
+    Child class for handling light sprites specifically
+    """
     def __init__(self, pos, sheet, loc_in_sheet, _game_gui, state):
         Sprite.__init__(self, pos, sheet, loc_in_sheet, _game_gui, (35, 35))
         self.rect = pygame.Rect(self.pos[0], self.pos[1], 35, 35)
@@ -352,6 +497,9 @@ class LightSprite(Sprite):
 
 
 class Button:
+    """
+    Class for handling buttons
+    """
     def __init__(self, text, color, bg_color, center, _game_gui):
         self.gui = _game_gui
         self.text = text
@@ -359,9 +507,9 @@ class Button:
         self.color = color
         self.bg_color = bg_color
         self.bold = False
-        self.font = self.gui.font
-        self.font_bold = self.gui.font_bold
-        self.surf = self.font.render(text, True, color, bg_color)
+        self.font_size = 40
+        font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
+        self.surf = font.render(text, True, color, bg_color)
         self.rect = self.surf.get_rect()
         self.rect.center = self.center
 
@@ -370,9 +518,11 @@ class Button:
         Make a text object for drawing
         """
         if not self.bold:
-            text_surf = self.font.render(self.text, True, self.color, self.bg_color)
+            font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
+            text_surf = font.render(self.text, True, self.color, self.bg_color)
         else:
-            text_surf = self.font_bold.render(self.text, True, self.color, self.bg_color)
+            font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
+            text_surf = font_bold.render(self.text, True, self.color, self.bg_color)
         text_rect = text_surf.get_rect()
         text_rect.center = self.center
         return text_surf, text_rect
@@ -400,6 +550,9 @@ class Button:
 
 
 class Prompt:
+    """
+    Prompt which takes input keyboard from user as a string
+    """
     def __init__(self, topleft, _gui, title=""):
         self.title = title
         self.string = ""
@@ -409,7 +562,7 @@ class Prompt:
         self.color = _gui.text_color
         self.bg_color = _gui.colors["white"]
         self.topleft = topleft
-        self.font = _gui.font
+        self.font_size = 40
         self.rect = pygame.Rect(self.topleft[0], self.topleft[1], 360, 70)
 
     def draw_rect(self):
@@ -426,10 +579,11 @@ class Prompt:
         """
         Make a text object for drawing
         """
+        font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
         if color is None:
-            text_surf = self.font.render(text, True, self.color, self.colors["turquoise blue"])
+            text_surf = font.render(text, True, self.color, self.colors["turquoise blue"])
         else:
-            text_surf = self.font.render(text, True, color, self.bg_color)
+            text_surf = font.render(text, True, color, self.bg_color)
         text_rect = text_surf.get_rect()
         text_rect.topleft = (self.topleft[0]+1, self.topleft[1]+3)
         return text_surf, text_rect
