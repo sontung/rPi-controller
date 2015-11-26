@@ -11,7 +11,7 @@ from multiprocessing import Queue, Process
 
 def update_process(talk, state, queue):
     if state.find("SSH") >= 0:
-        result = talk.command("cd light_control; sudo python state_checker.py lights").readlines()
+        result = talk.command("cd group12; sudo python state_checker.py lights").readlines()
         queue.put(result)
     elif state.find("Web") >= 0:
         result = talk.command("get")
@@ -27,6 +27,7 @@ class EventLogic:
         self.web_talk = core_communication.WebServerCommunication()
         self.web_talk_light_states = core_communication.WebServerCommunication(3875, "7IW3BGP1IT0FOGYQ")
         self.ssh_talk = core_communication.SSHCommunication()
+
         self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self.web_talk, _game_gui)
         self.pipi_ear = voice_recognition.VoiceRecognition()
         self.current_prompt = None
@@ -41,18 +42,16 @@ class EventLogic:
 
     def update_states_lights(self):
         if self._game_state.get_state().find("SSH") >= 0:
-            self.updater = Process(target=update_process, args=(self.ssh_talk, "SSH", self.queue_states_of_lights))
-            self.updater.start()
+            updater = Process(target=update_process, args=(self.ssh_talk, "SSH", self.queue_states_of_lights))
+            updater.start()
         elif self._game_state.get_state().find("Web") >= 0:
-            self.updater = Process(target=update_process, args=(self.web_talk_light_states, "Web",
-                                                                self.queue_states_of_lights))
-            self.updater.start()
+            updater = Process(target=update_process, args=(self.web_talk_light_states, "Web",
+                                                           self.queue_states_of_lights))
+            updater.start()
 
     def set_states_lights(self):
         if not self.queue_states_of_lights.empty():
             self.states_of_lights = self.queue_states_of_lights.get()
-            self.updater.terminate()
-            self.updater.join()
 
     def quit(self):
         pygame.quit()
@@ -84,17 +83,17 @@ class EventLogic:
 
             if self._game_state.get_state() == "welcome":
                 if self._game_gui.new.get_rect().collidepoint(event.pos):
-                    self._game_state.set_state("new season")
+                    self._game_state.set_state("new session")
                 elif self._game_gui.help.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("help")
                 elif self._game_gui.author.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("author")
                 elif self._game_gui.setting.get_rect().collidepoint(event.pos):
-                    self._game_state.set_state("setting")
+                    self._game_state.set_state("settings")
                 elif self._game_gui.quit.get_rect().collidepoint(event.pos):
                     self.quit()
 
-            elif self._game_state.get_state() == "new season":
+            elif self._game_state.get_state() == "new session":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
                 elif self._game_gui.ssh_button.get_rect().collidepoint(event.pos):  # connecting to SSH
@@ -107,9 +106,12 @@ class EventLogic:
                     else:
                         self._game_state.set_state("SSH season")
                         self.pipi.update_state("ssh")
-                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to web server
+                elif self._game_gui.web_button.get_rect().collidepoint(event.pos):  # connecting to web server
                     self._game_state.set_state("Web season")
                     self.pipi.update_state("web")
+                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to web server
+                    self._game_state.set_state("Socket season")
+                    self.pipi.update_state("socket")
 
             elif self._game_state.get_state() == "SSH season":
                 self.update_states_lights()
@@ -171,7 +173,7 @@ class EventLogic:
                 elif self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
 
-            elif self._game_state.get_state() == "setting":
+            elif self._game_state.get_state() == "settings":
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
                 elif self._game_gui.host_prompt.rect.collidepoint(event.pos):
@@ -204,7 +206,7 @@ class EventLogic:
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
 
-            elif self._game_state.get_state() in ["help", "author", "setting"]:
+            elif self._game_state.get_state() in ["help", "author", "settings"]:
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
 

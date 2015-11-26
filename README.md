@@ -2,6 +2,9 @@
 
 User interface for controlling raspberry Pi through SSH communication
 
+## 27th Nov
+New design and fix some bugs.
+
 ## 6th Nov
 Solve lagging problem when using "light states checking" feature.
 

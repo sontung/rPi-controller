@@ -1,7 +1,3 @@
-import time
-import event_handler
-
-
 class GameState:
     """
     The game state
