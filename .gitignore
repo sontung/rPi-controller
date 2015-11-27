@@ -42,5 +42,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# pyCharm 
+.idea
+
 # Python binaries
 *.pyc
