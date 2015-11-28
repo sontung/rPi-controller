@@ -34,7 +34,7 @@ class GUI:
         pygame.display.set_caption("Light Controlling Interface")
         self.button_sprites = pygame.image.load("assets\\images\\buttons.png")
         self.light_sprites = pygame.image.load("assets\\images\\leds.png")
-        self.bg_sprites = pygame.image.load("assets\\images\\bg.jpg")
+        self.bg_sprites = pygame.image.load("assets\\images\\bg3.jpg")
         self.typing_tag = False
         self.recording = False
         self.time_recording = None  # the moment the user records
@@ -108,9 +108,9 @@ class GUI:
         pygame.draw.rect(self.display_surface, self.colors["toolbar"], pygame.Rect(0, 0, self.window_width,
                                                                                    self.window_height/6))
         self.display_surface.blit(self.bg_sprites, (0, 0))
-        title_sur, title_rect = self.make_text(self.state.get_state(), self.colors["blue"], self.tb_color, None,
-                                               (30, self.window_height/15))
         if title:
+            title_sur, title_rect = self.make_text(self.state.get_state(), self.colors["blue"], self.tb_color, None,
+                                                   (30, self.window_height/15))
             self.display_surface.blit(title_sur, title_rect)
 
     def draw(self, state):
@@ -147,8 +147,8 @@ class GUI:
                                                                                (self.window_width/2,
                                                                                 self.window_height/2-120+i*35))
                 self.display_surface.blit(self.instructions_sur, self.instructions_rect)
-            self.back = Button("Back", self.text_color, self.tb_color,
-                               (self.window_width-60, self.window_height/8), self)
+            self.back = Button("Back", self.text_color, self.tb_color, None, self,
+                               (self.window_width-30, self.window_height/15))
             self.buttons = [self.back]
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
@@ -162,13 +162,15 @@ class GUI:
                                                                                (self.window_width/2,
                                                                                 self.window_height/2-120+i*35))
                 self.display_surface.blit(self.instructions_sur, self.instructions_rect)
-            self.back = Button("Back", self.text_color, self.tb_color, (self.window_width-60, self.window_height/8), self)
+            self.back = Button("Back", self.text_color, self.tb_color, None, self,
+                               (self.window_width-30, self.window_height/15))
             self.buttons = [self.back]
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
 
         elif state == "new session":
             self.draw_toolbar()
-            self.back = Button("Back", self.text_color, self.tb_color, (self.window_width-60, self.window_height/8), self)
+            self.back = Button("Back", self.text_color, self.tb_color, None, self,
+                               (self.window_width-30, self.window_height/15))
             choose_sur, choose_rect = self.make_text("Choose your pref communication", self.colors["green"], self.tile_color,
                                                      (self.window_width/2, self.window_height/4))
             self.ssh_button = Button("SSH connection", self.text_color, self.tile_color,
@@ -194,7 +196,8 @@ class GUI:
                                                    self.colors["green"], self.tile_color,
                                                    (self.window_width/2, self.window_height/4))
             self.save = Button("Save", self.text_color, self.tile_color, (4.5*self.window_width/5, self.window_height/4), self)
-            self.back = Button("Back", self.text_color, self.tb_color, (self.window_width-60, self.window_height/8), self)
+            self.back = Button("Back", self.text_color, self.tb_color, None, self,
+                               (self.window_width-30, self.window_height/15))
             self.buttons = [self.back, self.save]
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
             self.display_surface.blit(self.save.get_sr()[0], self.save.get_sr()[1])
@@ -211,9 +214,10 @@ class GUI:
             self.draw_toolbar(False)
             self.update_states_lights()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tb_color,
-                                                   (self.window_width/2, self.window_height/10))
-            self.back = Button("Back", self.text_color, self.tb_color, (self.window_width-60, self.window_height/8), self)
-            self.voice_mode = Button("Voice mode", self.text_color, self.tb_color, (100, self.window_height/8), self)
+                                                   (self.window_width/2, self.window_height/15))
+            self.back = Button("Back", self.text_color, self.tb_color, None, self,
+                               (self.window_width-30, self.window_height/15))
+            self.voice_mode = Button("Voice mode", self.text_color, self.tb_color, None, self, (130, self.window_height/15))
             self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
                                          {"on": (105, 0), "normal": (0, 0)}, self, self.red)
             self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
@@ -273,9 +277,10 @@ class GUI:
             self.update_states_lights()
             self.draw_toolbar(False)
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tb_color,
-                                                   (self.window_width/2, self.window_height/10))
+                                                   (self.window_width/2, self.window_height/15))
             recording_sur, recording_rect = self.indicate_saying()
-            self.back = Button("Back", self.text_color, self.tb_color, (self.window_width-60, self.window_height/8), self)
+            self.back = Button("Back", self.text_color, self.tb_color, None, self,
+                               (self.window_width-30, self.window_height/15))
             self.button_mode = Button("Button mode", self.colors["yellow"], self.tb_color, (100, self.window_height/8), self)
             self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
                                          {"on": (105, 0), "normal": (0, 0)}, self, self.red)
@@ -313,7 +318,7 @@ class GUI:
                 error_sur, error_rect = self.make_text("Wrong credentials", self.colors["red"], self.tile_color,
                                                        (self.window_width/2, self.window_height*2.5/4))
             self.back = Button("Back", self.text_color, self.tb_color,
-                               (self.window_width-60, self.window_height/10), self)
+                               (self.window_width-30, self.window_height/10), self)
             self.buttons = [self.back]
             self.display_surface.blit(error_sur, error_rect)
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
@@ -397,18 +402,22 @@ class Button:
     """
     Class for handling buttons
     """
-    def __init__(self, text, color, bg_color, center, _game_gui):
+    def __init__(self, text, color, bg_color, center, _game_gui, topright=None):
         self.gui = _game_gui
         self.text = text
+        self.topright = topright
         self.center = center
         self.color = color
         self.bg_color = bg_color
         self.bold = False
-        self.font_size = 40
+        self.font_size = 30
         font = pygame.font.Font("assets\\fonts\Cutie Patootie Skinny.ttf", self.font_size)
         self.surf = font.render(text, True, color)
         self.rect = self.surf.get_rect()
-        self.rect.center = self.center
+        if self.center:
+            self.rect.center = self.center
+        else:
+            self.rect.topright = self.topright
 
     def make_text(self):
         """
@@ -421,7 +430,10 @@ class Button:
             font_bold = pygame.font.Font("assets\\fonts\Cutie Patootie.ttf", self.font_size)
             text_surf = font_bold.render(self.text, True, self.color)
         text_rect = text_surf.get_rect()
-        text_rect.center = self.center
+        if self.center:
+            text_rect.center = self.center
+        else:
+            text_rect.topright = self.topright
         return text_surf, text_rect
 
     def get_rect(self):
