@@ -26,7 +26,7 @@ class EventLogic:
         self._game_gui = _game_gui
         self.web_talk = core_communication.WebServerCommunication()
         self.web_talk_light_states = core_communication.WebServerCommunication(3875, "7IW3BGP1IT0FOGYQ")
-        self.ssh_talk = core_communication.SSHCommunication()
+        self.ssh_talk = None
 
         self.pipi = voice_speak.Speaker("Pipi", self.ssh_talk, self.web_talk, _game_gui)
         self.pipi_ear = voice_recognition.VoiceRecognition()
@@ -97,6 +97,7 @@ class EventLogic:
                 if self._game_gui.back.get_rect().collidepoint(event.pos):
                     self._game_state.set_state("welcome")
                 elif self._game_gui.ssh_button.get_rect().collidepoint(event.pos):  # connecting to SSH
+                    self.ssh_talk = core_communication.SSHCommunication()
                     try:
                         self.ssh_talk.connect()
                     except paramiko.AuthenticationException:
@@ -108,10 +109,8 @@ class EventLogic:
                         self.pipi.update_state("ssh")
                 elif self._game_gui.web_button.get_rect().collidepoint(event.pos):  # connecting to web server
                     self._game_state.set_state("Web season")
+                    self.ssh_talk = None
                     self.pipi.update_state("web")
-                elif self._game_gui.socket_button.get_rect().collidepoint(event.pos):  # connecting to web server
-                    self._game_state.set_state("Socket season")
-                    self.pipi.update_state("socket")
 
             elif self._game_state.get_state() == "SSH season":
                 self.update_states_lights()

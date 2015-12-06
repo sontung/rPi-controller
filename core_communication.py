@@ -73,7 +73,8 @@ class SSHCommunication:
         Disconnect the port.
         :return:
         """
-        self.ssh.close()
+        if self.ssh:
+            self.ssh.close()
 
     def command(self, command):
         """

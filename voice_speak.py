@@ -36,10 +36,9 @@ class Speaker:
     def introduce(self):
         if not self.already_introduced:
             self.already_introduced = True
-            self.say('Hello, my name is %s. I\'m your assistant in our smart home '
-                     'programme. To get started, press Space bar to give me a command.' % self.name)
+            self.say('Hello, press Space bar to give me a command.')
         else:
-            self.say('Hello again, how can I help you? Press Space bar so I can hear you')
+            self.say('Hello again, press Space bar so I can hear you')
 
     def say(self, text):
         self.engine.say(text)

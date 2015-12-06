@@ -139,7 +139,7 @@ class GUI:
 
         elif state == "help":
             self.draw_toolbar()
-            sys.stdin = open("instruction.txt")
+            sys.stdin = open("assets/texts/instruction.txt")
             for i in range(9):
                 instructions = sys.stdin.readline().strip()
                 self.instructions_sur, self.instructions_rect = self.make_text(instructions, self.colors["black"],
@@ -154,7 +154,7 @@ class GUI:
 
         elif state == "author":
             self.draw_toolbar()
-            sys.stdin = open("author.txt")
+            sys.stdin = open("assets/texts/author.txt")
             for i in range(8):
                 instructions = sys.stdin.readline().strip()
                 self.instructions_sur, self.instructions_rect = self.make_text(instructions, self.colors["black"],
@@ -177,14 +177,11 @@ class GUI:
                                      (self.window_width/4, self.window_height/2), self)
             self.web_button = Button("Web connection", self.text_color, self.tile_color,
                                      (self.window_width*3/4, self.window_height/2), self)
-            self.socket_button = Button("Socket connection", self.text_color, self.tile_color,
-                                        (self.window_width/2, self.window_height/1.5), self)
-            self.buttons = [self.ssh_button, self.socket_button, self.back, self.web_button]
+            self.buttons = [self.ssh_button, self.back, self.web_button]
             self.display_surface.blit(choose_sur, choose_rect)
             self.display_surface.blit(self.back.get_sr()[0], self.back.get_sr()[1])
             self.display_surface.blit(self.ssh_button.get_sr()[0], self.ssh_button.get_sr()[1])
             self.display_surface.blit(self.web_button.get_sr()[0], self.web_button.get_sr()[1])
-            self.display_surface.blit(self.socket_button.get_sr()[0], self.socket_button.get_sr()[1])
 
         elif state == "settings":
             self.draw_toolbar()
@@ -210,7 +207,7 @@ class GUI:
             self.display_surface.blit(self.user_prompt.output_title()[0], self.user_prompt.output_title()[1])
             self.display_surface.blit(self.password_prompt.output_title()[0], self.password_prompt.output_title()[1])
 
-        elif state in ["SSH season", "Web season", "Socket season"]:
+        elif state in ["SSH season", "Web season"]:
             self.draw_toolbar(False)
             self.update_states_lights()
             title_sur, title_rect = self.make_text("CONTROL BOARD", self.colors["green"], self.tb_color,
@@ -281,7 +278,7 @@ class GUI:
             recording_sur, recording_rect = self.indicate_saying()
             self.back = Button("Back", self.text_color, self.tb_color, None, self,
                                (self.window_width-30, self.window_height/15))
-            self.button_mode = Button("Button mode", self.colors["yellow"], self.tb_color, (100, self.window_height/8), self)
+            self.button_mode = Button("Button mode", self.text_color, self.tb_color, None, self, (130, self.window_height/15))
             self.red_light = LightSprite((self.window_width*3/8, self.window_height/4), self.light_sprites,
                                          {"on": (105, 0), "normal": (0, 0)}, self, self.red)
             self.green_light = LightSprite((self.window_width*5/8, self.window_height/4), self.light_sprites,
@@ -303,7 +300,7 @@ class GUI:
 
         elif state.find("error") != -1:
             self.draw_toolbar()
-            sys.stdin = open("error_help.txt")
+            sys.stdin = open("assets/texts/error_help.txt")
             for i in range(9):
                 instructions = sys.stdin.readline().strip()
                 self.instructions_sur, self.instructions_rect = self.make_text(instructions, self.colors["black"],
