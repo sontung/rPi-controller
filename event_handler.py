@@ -114,6 +114,7 @@ class EventLogic:
 
             elif self._game_state.get_state() == "SSH season":
                 self.update_states_lights()
+                self.ssh_talk = core_communication.SSHCommunication()
                 self.ssh_talk.connect()
                 if self._game_gui.allOff_switch.get_rect().collidepoint(event.pos):
                     self.ssh_talk.command("echo turnOff >/tmp/commandPipe")

@@ -1,6 +1,10 @@
 # rPi-controller
 
-User interface for controlling raspberry Pi through SSH communication
+User interface for controlling raspberry Pi through SSH and Web server communication.
+See how it works [here](https://youtu.be/W0hVEEd3opw) 
+
+## 6th Dec
+Finalize project and complete documentations and reports
 
 ## 27th Nov
 New design and fix some bugs.

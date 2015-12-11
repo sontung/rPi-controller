@@ -17,14 +17,16 @@ class Speaker:
     def __getstate__(self):
         odict = self.__dict__.copy()
         if self.state == "ssh":
-            self.ssh_talk.disconnect()
+            if self.ssh_talk:
+                self.ssh_talk.disconnect()
         del odict["engine"]
         return odict
 
     def __setstate__(self, d):
         self.__dict__.update(d)
         if self.state == "ssh":
-            self.ssh_talk.connect()
+            if self.ssh_talk:
+                self.ssh_talk.connect()
         self.engine = pyttsx.init()
         self.engine.setProperty('volume', 1.0)
         self.engine.setProperty('voice',
